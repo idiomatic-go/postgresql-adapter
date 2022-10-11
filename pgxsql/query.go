@@ -74,3 +74,7 @@ func Query(ctx context.Context, sql string, arguments ...any) (Rows, error) {
 	}
 	return &rows{pgxRows: pgxRows}, nil
 }
+
+func nilQuery(ctx context.Context, sql string, arguments ...any) (Rows, error) {
+	return nil, nil
+}

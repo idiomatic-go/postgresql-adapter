@@ -7,6 +7,7 @@ const (
 type CommandTag struct {
 	Sql          string
 	RowsAffected int64
+	Result       any
 }
 
 type Rows interface {
