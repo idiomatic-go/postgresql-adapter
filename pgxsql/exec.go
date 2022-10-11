@@ -39,14 +39,26 @@ func devExec(ctx context.Context, sql string, arguments ...any) (CommandTag, err
 	table := database[tablename]
 	switch method {
 	case "GET":
-		result, _ := table.Get(resource)
-		return CommandTag{Sql: "GET", RowsAffected: 0, Result: result}, nil
+		result, ok := table.Get(resource)
+		count := 0
+		if ok {
+			count = 1
+		}
+		return CommandTag{Sql: "GET", RowsAffected: int64(count), Result: result}, nil
 	case "PUT":
-		table.Put(arguments[0])
-		return CommandTag{Sql: "PUT", RowsAffected: 1, Result: nil}, nil
+		ok := table.Put(arguments[0])
+		count := 0
+		if ok {
+			count = 1
+		}
+		return CommandTag{Sql: "PUT", RowsAffected: int64(count), Result: nil}, nil
 	case "DELETE":
-		table.Delete(resource)
-		return CommandTag{Sql: "DELETE", RowsAffected: 1, Result: nil}, nil
+		ok := table.Delete(resource)
+		count := 0
+		if ok {
+			count = 1
+		}
+		return CommandTag{Sql: "DELETE", RowsAffected: int64(count), Result: nil}, nil
 	case "POST":
 		if table == nil {
 			eq, ok := arguments[0].(util.IsEqual)
@@ -76,9 +88,11 @@ func parseCommand(sql string) (method string, tablename string, resource string,
 	if tablename == "" {
 		return "", "", "", errors.New("invalid tablename: empty")
 	}
-	if resource == "" {
-		return "", "", "", errors.New("invalid resource: empty")
+	//if resource == "" {
+	//	return "", "", "", errors.New("invalid resource: empty")
+	//}
+	if len(parts) > 1 {
+		resource = parts[1]
 	}
-	resource = parts[1]
 	return method, tablename, resource, nil
 }
