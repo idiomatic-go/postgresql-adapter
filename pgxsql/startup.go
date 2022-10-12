@@ -7,6 +7,10 @@ import (
 var c = make(chan vhost.Message, 10)
 var started = false
 
+func IsStarted() bool {
+	return started
+}
+
 // init - registers package with a channel
 func init() {
 	vhost.RegisterPackage(Uri, c)
@@ -19,14 +23,6 @@ func startup() {
 
 func shutdown() {
 	vhost.UnregisterPackage(Uri)
-}
-
-func sendStartupMessage() {
-	c <- vhost.Message{Event: vhost.StartupEvent}
-}
-
-func sendShutdownMessage() {
-	c <- vhost.Message{Event: vhost.ShutdownEvent}
 }
 
 func receive() {

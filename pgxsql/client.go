@@ -11,8 +11,6 @@ import (
 
 var dbclient *pgxpool.Pool
 
-var credentials vhost.Credentials
-
 var clientStartup util.Func = func() {
 	// Read the configuration map and database Url first
 	m, url := readConfiguration()
@@ -34,7 +32,7 @@ var clientStartup util.Func = func() {
 		vhost.SendErrorResponse(Uri)
 		return
 	}
-	
+
 	// Create connection string, pool and acquire connection
 	s := connectString(url)
 	if s == "" {
