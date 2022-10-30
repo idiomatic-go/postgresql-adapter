@@ -1,10 +1,13 @@
 package pgxsql
 
+// https://pkg.go.dev/github.com/jackc/pgx/v5/pgtype
 import (
 	"context"
 	"fmt"
+	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/common-lib/vhost"
+	start "github.com/idiomatic-go/common-lib/vhost/startup"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"strings"
 )
@@ -15,7 +18,7 @@ var clientStartup util.Func = func() {
 	// Read the configuration map and database Url first
 	m, url := readConfiguration()
 	if m == nil {
-		vhost.SendErrorResponse(Uri)
+		start.SendErrorResponse(Uri)
 		return
 	}
 
@@ -28,28 +31,28 @@ var clientStartup util.Func = func() {
 
 	// Validate credentials
 	if credentials == nil {
-		util.LogPrintf("%v", "pgxsql credentials function is nil")
-		vhost.SendErrorResponse(Uri)
+		logxt.LogPrintf("%v", "pgxsql credentials function is nil")
+		start.SendErrorResponse(Uri)
 		return
 	}
 
 	// Create connection string, pool and acquire connection
 	s := connectString(url)
 	if s == "" {
-		vhost.SendErrorResponse(Uri)
+		start.SendErrorResponse(Uri)
 		return
 	}
 	dbclient, err := pgxpool.New(context.Background(), s)
 	if err != nil {
-		util.LogPrintf("unable to create connection pool : %v", err)
-		vhost.SendErrorResponse(Uri)
+		logxt.LogPrintf("unable to create connection pool : %v", err)
+		start.SendErrorResponse(Uri)
 		return
 	}
 	conn, err1 := dbclient.Acquire(context.Background())
 	defer conn.Release()
 	if err1 != nil {
-		util.LogPrintf("unable to acquire connection from pool : %v", err1)
-		vhost.SendErrorResponse(Uri)
+		logxt.LogPrintf("unable to acquire connection from pool : %v", err1)
+		start.SendErrorResponse(Uri)
 		shutdown()
 		return
 	}
@@ -64,7 +67,7 @@ func clientShutdown() {
 func connectString(url string) string {
 	username, password, err := credentials()
 	if err != nil {
-		util.LogPrintf("error accessing credentials: %v", err)
+		logxt.LogPrintf("error accessing credentials: %v", err)
 		return ""
 	}
 	return fmt.Sprintf(url, username, password)
@@ -73,12 +76,12 @@ func connectString(url string) string {
 func readConfiguration() (map[string]string, string) {
 	m, err := vhost.ReadMap(ConfigFileName)
 	if err != nil {
-		util.LogPrintf("error reading configuration file from mounted file system : %v", err)
+		logxt.LogPrintf("error reading configuration file from mounted file system : %v", err)
 		return nil, ""
 	}
 	s, ok := m[DatabaseURLKey]
 	if !ok || s == "" {
-		util.LogPrintf("database URL does not exist in map, or value is empty : %v", DatabaseURLKey)
+		logxt.LogPrintf("database URL does not exist in map, or value is empty : %v", DatabaseURLKey)
 		return nil, ""
 	}
 	return m, s

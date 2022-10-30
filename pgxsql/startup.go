@@ -1,10 +1,10 @@
 package pgxsql
 
 import (
-	"github.com/idiomatic-go/common-lib/vhost"
+	start "github.com/idiomatic-go/common-lib/vhost/startup"
 )
 
-var c = make(chan vhost.Message, 10)
+var c = make(chan start.Message, 10)
 var started = false
 
 func IsStarted() bool {
@@ -13,7 +13,7 @@ func IsStarted() bool {
 
 // init - registers package with a channel
 func init() {
-	vhost.RegisterPackage(Uri, c)
+	start.RegisterPackage(Uri, c, nil)
 	go receive()
 }
 
@@ -22,7 +22,7 @@ func startup() {
 }
 
 func shutdown() {
-	vhost.UnregisterPackage(Uri)
+	start.UnregisterPackage(Uri)
 }
 
 func receive() {
@@ -34,13 +34,13 @@ func receive() {
 				return
 			}
 			switch msg.Event {
-			case vhost.StartupEvent:
+			case start.StartupEvent:
 				if !started {
 					started = true
-					credentials = vhost.AccessCredentials(&msg)
+					credentials = start.AccessCredentials(&msg)
 					startup()
 				}
-			case vhost.ShutdownEvent:
+			case start.ShutdownEvent:
 				shutdown()
 			}
 		}

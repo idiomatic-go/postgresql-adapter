@@ -1,7 +1,8 @@
 package pgxsql
 
 const (
-	Uri = "postgresql"
+	Scheme = "pgxsql"
+	Uri    = "postgresql"
 )
 
 type CommandTag struct {
@@ -10,17 +11,28 @@ type CommandTag struct {
 	Result       any
 }
 
+type FieldDescription struct {
+	Name                 string
+	TableOID             uint32
+	TableAttributeNumber uint16
+	DataTypeOID          uint32
+	DataTypeSize         int16
+	TypeModifier         int32
+	Format               int16
+}
+
 type Rows interface {
+	// Close closes the rows, making the connection ready for use again. It is safe
+	// to call Close after rows is already closed.
 	Close()
 
 	// Err returns any error that occurred while reading.
 	Err() error
 
-	// CommandTag returns the command tag from this query. It is only available after Rows is closed.
+	// CommandTag returns the command tag from this queryv1. It is only available after Rows is closed.
 	CommandTag() CommandTag
 
-	// TODO : determine use case
-	//FieldDescriptions() []pgconn.FieldDescription
+	FieldDescriptions() []FieldDescription
 
 	// Next prepares the next row for reading. It returns true if there is another
 	// row and false if no more rows are available. It automatically closes rows
@@ -42,7 +54,7 @@ type Rows interface {
 	// call or the Rows is closed.
 	RawValues() [][]byte
 
-	// Conn returns the underlying *Conn on which the query was executed. This may return nil if Rows did not come from a
+	// Conn returns the underlying *Conn on which the queryv1 was executed. This may return nil if Rows did not come from a
 	// *Conn (e.g. if it was created by RowsFromResultReader)
 	// TODO : determine use case
 	//Conn() *Conn

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/util"
 	"strings"
 )
@@ -20,7 +21,7 @@ func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, error)
 	}
 	t, err := dbclient.Exec(ctx, sql, arguments)
 	if err != nil {
-		util.LogPrintf("error on database execution call : %v", err)
+		logxt.LogPrintf("error on database execution call : %v", err)
 		return CommandTag{}, err
 	}
 	return CommandTag{Sql: t.String(), RowsAffected: t.RowsAffected()}, nil
@@ -33,7 +34,7 @@ func devExec(ctx context.Context, sql string, arguments ...any) (CommandTag, err
 	// The command text is of the form : [http-method]' '[tablename/resource-id]
 	method, tablename, resource, err := parseCommand(sql)
 	if err != nil {
-		util.LogPrintf("error on database execution command parse : %v", err)
+		logxt.LogPrintf("error on database execution command parse : %v", err)
 		return CommandTag{}, err
 	}
 	table := database[tablename]
@@ -63,7 +64,7 @@ func devExec(ctx context.Context, sql string, arguments ...any) (CommandTag, err
 		if table == nil {
 			eq, ok := arguments[0].(util.IsEqual)
 			if !ok {
-				util.LogPrintf("%v", "error on table creation: IsEqual function is not available")
+				logxt.LogPrintf("%v", "error on table creation: IsEqual function is not available")
 				return CommandTag{}, err
 			}
 			table = util.CreateAnyTable(eq)

@@ -2,12 +2,14 @@ package pgxsql
 
 import (
 	"context"
-	"github.com/idiomatic-go/common-lib/util"
+	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type rows struct {
 	pgxRows pgx.Rows
+	fd      []FieldDescription
 }
 
 func (r *rows) Close() {
@@ -29,6 +31,13 @@ func (r *rows) CommandTag() CommandTag {
 	}
 	t := r.pgxRows.CommandTag()
 	return CommandTag{RowsAffected: t.RowsAffected(), Sql: t.String()}
+}
+
+func (r *rows) FieldDescriptions() []FieldDescription {
+	if r == nil {
+		return nil
+	}
+	return r.fd
 }
 
 func (r *rows) Next() bool {
@@ -69,12 +78,26 @@ func Query(ctx context.Context, sql string, arguments ...any) (Rows, error) {
 	}
 	pgxRows, err := dbclient.Query(ctx, sql, arguments)
 	if err != nil {
-		util.LogPrintf("Error on query : %v", err)
+		logxt.LogPrintf("Error on queryv1 : %v", err)
 		return nil, err
 	}
-	return &rows{pgxRows: pgxRows}, nil
+	return &rows{pgxRows: pgxRows, fd: fieldDescriptions(pgxRows.FieldDescriptions())}, nil
 }
 
 func nilQuery(ctx context.Context, sql string, arguments ...any) (Rows, error) {
 	return nil, nil
+}
+
+func fieldDescriptions(fields []pgconn.FieldDescription) []FieldDescription {
+	var result []FieldDescription
+	for _, f := range fields {
+		result = append(result, FieldDescription{Name: f.Name,
+			TableOID:             f.TableOID,
+			TableAttributeNumber: f.TableAttributeNumber,
+			DataTypeOID:          f.DataTypeOID,
+			DataTypeSize:         f.DataTypeSize,
+			TypeModifier:         f.TypeModifier,
+			Format:               f.Format})
+	}
+	return result
 }
