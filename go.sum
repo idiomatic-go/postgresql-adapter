@@ -2,6 +2,10 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/idiomatic-go/common-lib v0.0.0-20221030150121-81528aaa3aaa h1:tyiN9Q0A9NVcyJPjz4mZQX+9JTkTDwQ+0UG/qy0xCzM=
 github.com/idiomatic-go/common-lib v0.0.0-20221030150121-81528aaa3aaa/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
+github.com/idiomatic-go/common-lib v0.0.0-20221031113206-97cda0c8a86b h1:acxfjaPtREmLYD2FadDLs+S4M8uMCvYug+WWXuI5XnI=
+github.com/idiomatic-go/common-lib v0.0.0-20221031113206-97cda0c8a86b/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
+github.com/idiomatic-go/common-lib v0.0.0-20221102140730-90d66ec59268 h1:fEMSzEK04bjIQRAqtUOdf6DEWwHYQ92gr+Gc2zJwMho=
+github.com/idiomatic-go/common-lib v0.0.0-20221102140730-90d66ec59268/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/idiomatic-go/core-types v0.0.0-20221028133626-765fb927d1e3 h1:0xO9lII/XDoVMxve5yFCiNEx1AVLcW8qlXarMPV22Zg=
 github.com/idiomatic-go/core-types v0.0.0-20221028133626-765fb927d1e3/go.mod h1:9+mBOHU22E6cM/9rUplE9tfb2ESa7FCgG2OS1zncQ4I=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=

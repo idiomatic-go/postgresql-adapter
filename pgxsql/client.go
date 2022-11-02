@@ -7,7 +7,6 @@ import (
 	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/common-lib/vhost"
-	start "github.com/idiomatic-go/common-lib/vhost/startup"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"strings"
 )
@@ -18,7 +17,7 @@ var clientStartup util.Func = func() {
 	// Read the configuration map and database Url first
 	m, url := readConfiguration()
 	if m == nil {
-		start.SendErrorResponse(Uri)
+		vhost.SendErrorResponse(Uri)
 		return
 	}
 
@@ -32,27 +31,27 @@ var clientStartup util.Func = func() {
 	// Validate credentials
 	if credentials == nil {
 		logxt.LogPrintf("%v", "pgxsql credentials function is nil")
-		start.SendErrorResponse(Uri)
+		vhost.SendErrorResponse(Uri)
 		return
 	}
 
 	// Create connection string, pool and acquire connection
 	s := connectString(url)
 	if s == "" {
-		start.SendErrorResponse(Uri)
+		vhost.SendErrorResponse(Uri)
 		return
 	}
 	dbclient, err := pgxpool.New(context.Background(), s)
 	if err != nil {
 		logxt.LogPrintf("unable to create connection pool : %v", err)
-		start.SendErrorResponse(Uri)
+		vhost.SendErrorResponse(Uri)
 		return
 	}
 	conn, err1 := dbclient.Acquire(context.Background())
 	defer conn.Release()
 	if err1 != nil {
 		logxt.LogPrintf("unable to acquire connection from pool : %v", err1)
-		start.SendErrorResponse(Uri)
+		vhost.SendErrorResponse(Uri)
 		shutdown()
 		return
 	}

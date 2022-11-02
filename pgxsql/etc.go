@@ -1,7 +1,7 @@
 package pgxsql
 
 import (
-	start "github.com/idiomatic-go/common-lib/vhost/startup"
+	"github.com/idiomatic-go/common-lib/vhost"
 )
 
 // DATABASE_URL=postgres://{user}:{password}@{hostname}:{port}/{database-name}
@@ -16,4 +16,4 @@ const (
 )
 
 // Credentials function for authentication
-var credentials start.Credentials
+var credentials vhost.Credentials
