@@ -1,0 +1,28 @@
+{
+  "SLOEntryId":1002,
+  "CustomerId":88,
+  "SLOName":"sat-99-750",
+  "Application":"domain.sub-domain",
+  "RouteName":"upstream-origin",
+
+  "Category":4,
+
+  "StatusCodes":"",
+  "MetricName":"",
+  "MetricNameSecondary":"",
+  "Function":"",
+
+  "FromIntervalMinutes":1,
+  "ToIntervalMinutes":5,
+  "WatchPercent":90,
+  "ThresholdPercent":99,
+  "ThresholdValue":750,
+
+  "Enabled":true,
+  "TrackTrafficPeak":false,
+  "TrafficFloor":false,
+  "Egress":true,
+  "LocalityScope":1,
+  "TrafficProtocol":1
+}
+

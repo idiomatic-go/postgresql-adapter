@@ -1,0 +1,28 @@
+{
+  "SLOEntryId":1001,
+  "CustomerId":99,
+  "SLOName":"lat-95-500",
+  "Application":"domain.sub-domain",
+  "RouteName":"upstream-origin",
+
+  "Category":1,
+
+  "StatusCodes":"",
+  "MetricName":"",
+  "MetricNameSecondary":"",
+  "Function":"",
+
+  "FromIntervalMinutes":5,
+  "ToIntervalMinutes":10,
+  "WatchPercent":90,
+  "ThresholdPercent":95,
+  "ThresholdValue":500,
+
+  "Enabled":true,
+  "TrackTrafficPeak":false,
+  "TrafficFloor":false,
+  "Egress":true,
+  "LocalityScope":1,
+  "TrafficProtocol":1
+}
+

@@ -6,6 +6,8 @@ github.com/idiomatic-go/common-lib v0.0.0-20221031113206-97cda0c8a86b h1:acxfjaP
 github.com/idiomatic-go/common-lib v0.0.0-20221031113206-97cda0c8a86b/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/idiomatic-go/common-lib v0.0.0-20221102140730-90d66ec59268 h1:fEMSzEK04bjIQRAqtUOdf6DEWwHYQ92gr+Gc2zJwMho=
 github.com/idiomatic-go/common-lib v0.0.0-20221102140730-90d66ec59268/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
+github.com/idiomatic-go/common-lib v0.0.0-20221103122009-da2e0f482b3f h1:sgelNG3z+y+183BByS4+/DL2k/mVhu1k0BISF7a2nFE=
+github.com/idiomatic-go/common-lib v0.0.0-20221103122009-da2e0f482b3f/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/idiomatic-go/core-types v0.0.0-20221028133626-765fb927d1e3 h1:0xO9lII/XDoVMxve5yFCiNEx1AVLcW8qlXarMPV22Zg=
 github.com/idiomatic-go/core-types v0.0.0-20221028133626-765fb927d1e3/go.mod h1:9+mBOHU22E6cM/9rUplE9tfb2ESa7FCgG2OS1zncQ4I=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=

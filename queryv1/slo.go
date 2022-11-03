@@ -11,48 +11,40 @@ import (
 	"github.com/idiomatic-go/postgresql-adapter/pgxsql"
 )
 
-func SLOEntry(ctx context.Context, urn *urn.QbeURN) (*v1.SLOEntry, error) {
-	var err = validateUrn(urn)
-	if err != nil {
-		return nil, err
+func SLOEntry(ctx context.Context, uri string) (entry *v1.SLOEntry, err error) {
+	u := urn.Parse(uri)
+	if u.Err != nil {
+		return nil, u.Err
 	}
-	entry := new(v1.SLOEntry)
-	switch urn.Scheme() {
-	case pgxsql.Scheme, "":
+	entry = new(v1.SLOEntry)
+	switch u.Nid {
+	case urn.QbeNid, "", pgxsql.Scheme:
 		break
 	case fse.Scheme:
 		err = processFse(ctx, entry)
 		break
 	default:
-		err = errors.New(fmt.Sprintf("invalid scheme : %v", urn.Scheme()))
+		err = errors.New(fmt.Sprintf("invalid Nid : %v", u.Nid))
 	}
 	return entry, err
 }
 
-func SLOEntryList(ctx context.Context, urn *urn.QbeURN) ([]v1.SLOEntry, error) {
-	var err = validateUrn(urn)
-	if err != nil {
-		return nil, err
+func SLOEntryList(ctx context.Context, uri string) (entry []v1.SLOEntry, err error) {
+	u := urn.Parse(uri)
+	if u.Err != nil {
+		return nil, u.Err
 	}
-	var entry []v1.SLOEntry
-	switch urn.Scheme() {
-	case pgxsql.Scheme, "":
+	switch u.Nid {
+	case urn.QbeNid, "":
 
 		break
 	case fse.Scheme:
 		err = processFse(ctx, entry)
 		break
 	default:
-		err = errors.New(fmt.Sprintf("invalid scheme : %v", urn.Scheme()))
+		err = errors.New(fmt.Sprintf("invalid Nid : %v", u.Nid))
 	}
 	return entry, err
-}
-
-func validateUrn(urn *urn.QbeURN) error {
-	if urn == nil {
-		return errors.New("invalid QbeURN is nil")
-	}
-	return urn.Err
 }
 
 func processFse(ctx context.Context, entry any) error {
