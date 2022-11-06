@@ -7,22 +7,17 @@
 
   "Category":4,
 
-  "StatusCodes":"",
-  "MetricName":"",
-  "MetricNameSecondary":"",
-  "Function":"",
+  "TrafficType":1,
+  "TrafficProtocol": 1,
 
-  "FromIntervalMinutes":1,
-  "ToIntervalMinutes":5,
+  "ProcessingIntervalMinutes":1,
+  "WindowIntervalMinutes":5,
   "WatchPercent":90,
   "ThresholdPercent":99,
   "ThresholdValue":750,
 
-  "Enabled":true,
-  "TrackTrafficPeak":false,
-  "TrafficFloor":false,
-  "Egress":true,
-  "LocalityScope":1,
-  "TrafficProtocol":1
+  "DisableProcessing":false,
+  "DisableTriage":false,
+  "LocalityScope":1
 }
 

@@ -1,8 +1,9 @@
 package pgxsql
 
 const (
-	Scheme = "pgxsql"
-	Uri    = "postgresql"
+	Scheme         = "pgxsql"
+	Uri            = "postgresql"
+	ExecContentSql = "EXEC ProcessContent()"
 )
 
 type CommandTag struct {

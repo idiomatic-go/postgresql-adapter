@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-var dbclient *pgxpool.Pool
+var dbClient *pgxpool.Pool
 
 var clientStartup util.Func = func() {
 	// Read the configuration map and database Url first
@@ -23,7 +23,7 @@ var clientStartup util.Func = func() {
 
 	// Determine if this is an override by interrogating the database url
 	if strings.Contains(url, DatabaseOverride) {
-		overrideExec = devExec
+		overrideExec = nilExec
 		overrideQuery = nilQuery
 		return
 	}
@@ -41,13 +41,14 @@ var clientStartup util.Func = func() {
 		vhost.SendErrorResponse(Uri)
 		return
 	}
-	dbclient, err := pgxpool.New(context.Background(), s)
+	var err error
+	dbClient, err = pgxpool.New(context.Background(), s)
 	if err != nil {
 		logxt.LogPrintf("unable to create connection pool : %v", err)
 		vhost.SendErrorResponse(Uri)
 		return
 	}
-	conn, err1 := dbclient.Acquire(context.Background())
+	conn, err1 := dbClient.Acquire(context.Background())
 	defer conn.Release()
 	if err1 != nil {
 		logxt.LogPrintf("unable to acquire connection from pool : %v", err1)
@@ -58,8 +59,8 @@ var clientStartup util.Func = func() {
 }
 
 func clientShutdown() {
-	if dbclient != nil {
-		dbclient.Close()
+	if dbClient != nil {
+		dbClient.Close()
 	}
 }
 

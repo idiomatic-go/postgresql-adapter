@@ -2,6 +2,7 @@ package pgxsql
 
 import (
 	"context"
+	"github.com/idiomatic-go/common-lib/fse"
 	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -73,10 +74,10 @@ type queryFn func(ctx context.Context, sql string, arguments ...any) (Rows, erro
 var overrideQuery queryFn
 
 func Query(ctx context.Context, sql string, arguments ...any) (Rows, error) {
-	if overrideQuery != nil {
-		return overrideQuery(ctx, sql, arguments)
+	if sql == ExecContentSql {
+		return fse.ProcessContent[Rows](ctx)
 	}
-	pgxRows, err := dbclient.Query(ctx, sql, arguments)
+	pgxRows, err := dbClient.Query(ctx, sql, arguments)
 	if err != nil {
 		logxt.LogPrintf("Error on queryv1 : %v", err)
 		return nil, err
