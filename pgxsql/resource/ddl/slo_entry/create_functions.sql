@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION log_slo_entry_changes()
+CREATE OR REPLACE FUNCTION LogSLOEntryChanges()
   RETURNS TRIGGER
   LANGUAGE PLPGSQL
   AS
@@ -12,5 +12,41 @@ ELSE
 	VALUES(nextval('slo_entry_log_id'),NEW.id,NEW.name,TG_OP,now());
 END IF;
 RETURN NULL;
+END;
+$$
+
+CREATE OR REPLACE FUNCTION GetSLOEntry(id int)
+  RETURNS SET OF slo_entry
+  LANGUAGE PLPGSQL
+  AS
+$$
+BEGIN
+    SELECT *
+    FROM slo_entry e
+    WHERE e.id = id
+END;
+$$
+
+CREATE OR REPLACE FUNCTION GetSLOEntryByName(name varchar(40))
+  RETURNS SET OF slo_entry
+  LANGUAGE PLPGSQL
+  AS
+$$
+BEGIN
+    SELECT *
+    FROM slo_entry e
+    WHERE e.name = name
+END;
+$$
+
+CREATE OR REPLACE FUNCTION GetSLOEntryBySegment(segments int, remainder int)
+  RETURNS SET OF slo_entry
+  LANGUAGE PLPGSQL
+  AS
+$$
+BEGIN
+    SELECT *
+    FROM slo_entry e
+    WHERE MOD(e.id,segments) = remainder
 END;
 $$
