@@ -1,9 +1,5 @@
 package pgxsql
 
-import (
-	"github.com/idiomatic-go/common-lib/vhost"
-)
-
 // DATABASE_URL=postgres://{user}:{password}@{hostname}:{port}/{database-name}
 // psql -x "postgres://tsdbadmin@t9aggksc24.gspnhi29bv.tsdb.cloud.timescale.com:33251/tsdb?sslmode=require"
 // Password for user tsdbadmin:
@@ -14,6 +10,3 @@ const (
 	DatabaseOverride = "override"
 	// TODO : add keys for configuration map
 )
-
-// Credentials function for authentication
-var credentials vhost.Credentials

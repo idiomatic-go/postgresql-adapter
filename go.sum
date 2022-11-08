@@ -12,6 +12,8 @@ github.com/idiomatic-go/common-lib v0.0.0-20221105200010-b01edb047ef7 h1:PoZa12M
 github.com/idiomatic-go/common-lib v0.0.0-20221105200010-b01edb047ef7/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/idiomatic-go/common-lib v0.0.0-20221106111338-af72c292c9b8 h1:VzNIctehXwqJUrurjSdIHxgF0XfqVTpNwcwB/dE6Viw=
 github.com/idiomatic-go/common-lib v0.0.0-20221106111338-af72c292c9b8/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
+github.com/idiomatic-go/common-lib v0.0.0-20221108153743-dafdad0fc971 h1:PVFC36Yg9g+7JvzT9G8Mj5oxmcxNMslC3lO8N+5fR3I=
+github.com/idiomatic-go/common-lib v0.0.0-20221108153743-dafdad0fc971/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/idiomatic-go/core-types v0.0.0-20221028133626-765fb927d1e3 h1:0xO9lII/XDoVMxve5yFCiNEx1AVLcW8qlXarMPV22Zg=
 github.com/idiomatic-go/core-types v0.0.0-20221028133626-765fb927d1e3/go.mod h1:9+mBOHU22E6cM/9rUplE9tfb2ESa7FCgG2OS1zncQ4I=
 github.com/idiomatic-go/core-types v0.0.0-20221103153127-a6f0db1fb25b h1:TfqA7lwLuhbUVYcC0fKGQYQP8e3GgRqM+W5/7jTmY1k=

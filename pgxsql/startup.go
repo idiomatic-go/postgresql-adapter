@@ -5,11 +5,6 @@ import (
 )
 
 var c = make(chan vhost.Message, 10)
-var started = false
-
-func IsStarted() bool {
-	return started
-}
 
 // init - registers package with a channel
 func init() {
@@ -17,12 +12,12 @@ func init() {
 	go receive()
 }
 
-func startup() {
-	clientStartup()
+func startup(msg vhost.Message) {
+	clientStartup(msg)
 }
 
 func shutdown() {
-	vhost.UnregisterPackage(Uri)
+	clientShutdown()
 }
 
 func receive() {
@@ -35,10 +30,8 @@ func receive() {
 			}
 			switch msg.Event {
 			case vhost.StartupEvent:
-				if !started {
-					started = true
-					credentials = vhost.AccessCredentials(&msg)
-					startup()
+				if !isClientStarted() {
+					startup(msg)
 				}
 			case vhost.ShutdownEvent:
 				shutdown()

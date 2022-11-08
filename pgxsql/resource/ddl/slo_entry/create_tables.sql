@@ -24,7 +24,9 @@ CREATE TABLE slo_entry(
     metric_name_secondary VARCHAR(40),
     function_name VARCHAR(40),
     disable_processing BOOLEAN,
-    disable_triage BOOLEAN
+    disable_triage BOOLEAN,
+    created_ts TIMESTAMP(6) NOT NULL,
+    updated_ts TIMESTAMP(6) NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -35,6 +37,6 @@ CREATE TABLE slo_entry_log (
     slo_entry_id INT NOT NULL,
     name VARCHAR(40) NOT NULL,
     operation TEXT NOT NULL,
-    changed_on TIMESTAMP(6) NOT NULL,
+    changed_ts TIMESTAMP(6) NOT NULL,
     PRIMARY KEY(id)
 );

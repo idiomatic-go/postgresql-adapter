@@ -5,10 +5,10 @@ CREATE OR REPLACE FUNCTION LogSLOEntryChanges()
 $$
 BEGIN
 IF (TG_OP = 'DELETE') THEN
-	INSERT INTO slo_entry_log(id,slo_entry_id,name,changed_on)
+	INSERT INTO slo_entry_log(id,slo_entry_id,name,changed_ts)
 	VALUES(nextval('slo_entry_log_id'),OLD.id,OLD.name,TG_OP,now());
 ELSE
-    INSERT INTO slo_entry_log(id,slo_entry_id,name,changed_on)
+    INSERT INTO slo_entry_log(id,slo_entry_id,name,changed_ts)
 	VALUES(nextval('slo_entry_log_id'),NEW.id,NEW.name,TG_OP,now());
 END IF;
 RETURN NULL;

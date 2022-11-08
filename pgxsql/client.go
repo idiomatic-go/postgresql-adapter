@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/idiomatic-go/common-lib/logxt"
-	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/common-lib/vhost"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"strings"
@@ -13,7 +12,11 @@ import (
 
 var dbClient *pgxpool.Pool
 
-var clientStartup util.Func = func() {
+func isClientStarted() bool {
+	return dbClient != nil
+}
+
+var clientStartup vhost.MessageHandler = func(msg vhost.Message) {
 	// Read the configuration map and database Url first
 	m, url := readConfiguration()
 	if m == nil {
@@ -27,7 +30,7 @@ var clientStartup util.Func = func() {
 		overrideQuery = nilQuery
 		return
 	}
-
+	credentials := vhost.AccessCredentials(&msg)
 	// Validate credentials
 	if credentials == nil {
 		logxt.LogPrintf("%v", "pgxsql credentials function is nil")
@@ -36,7 +39,7 @@ var clientStartup util.Func = func() {
 	}
 
 	// Create connection string, pool and acquire connection
-	s := connectString(url)
+	s := connectString(url, credentials)
 	if s == "" {
 		vhost.SendErrorResponse(Uri)
 		return
@@ -53,18 +56,18 @@ var clientStartup util.Func = func() {
 	if err1 != nil {
 		logxt.LogPrintf("unable to acquire connection from pool : %v", err1)
 		vhost.SendErrorResponse(Uri)
-		shutdown()
-		return
+		clientShutdown()
 	}
 }
 
 func clientShutdown() {
 	if dbClient != nil {
 		dbClient.Close()
+		dbClient = nil
 	}
 }
 
-func connectString(url string) string {
+func connectString(url string, credentials vhost.Credentials) string {
 	username, password, err := credentials()
 	if err != nil {
 		logxt.LogPrintf("error accessing credentials: %v", err)
