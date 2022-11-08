@@ -8,7 +8,7 @@ IF (TG_OP = 'DELETE') THEN
 	INSERT INTO customer_log(id,customer_id,org_id,changed_ts)
 	VALUES(nextval('customer_log_id'),OLD.id,OLD.org_id,TG_OP,now());
 ELSE
-    INSERT INTO customer_log(id,customer_id,org_id,changed_on)
+    INSERT INTO customer_log(id,customer_id,org_id,changed_ts)
 	VALUES(nextval('customer_log_id'),NEW.id,NEW.org_id,TG_OP,now());
 END IF;
 RETURN NULL;
@@ -27,7 +27,7 @@ BEGIN
 END;
 $$
 
-CREATE OR REPLACE FUNCTION GetCustomerByOrg(org_id varchar(40))
+CREATE OR REPLACE FUNCTION GetCustomerByOrg(id int,org_id varchar(40))
   RETURNS SET OF customer
   LANGUAGE PLPGSQL
   AS
@@ -35,7 +35,7 @@ $$
 BEGIN
     SELECT *
     FROM customer c
-    WHERE c.org_id = org_id
+    WHERE c.id = id AND c.org_id = org_id
 END;
 $$
 

@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/idiomatic-go/common-lib v0.0.0-20221108153743-dafdad0fc971
-	github.com/idiomatic-go/core-types v0.0.0-20221105150450-da3638e56541
+	github.com/idiomatic-go/core-types v0.0.0-20221108190359-ac8fb7d58d9a
 	github.com/jackc/pgx/v5 v5.0.2
 )
 

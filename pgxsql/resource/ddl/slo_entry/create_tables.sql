@@ -1,42 +1,43 @@
 DROP TABLE IF EXISTS slo_entry;
 
 CREATE TABLE slo_entry(
-    id INT,
-    customer_id INT NOT NULL,
-    name VARCHAR(40) NOT NULL,
-    application VARCHAR(40) NOT NULL,
-    route_name VARCHAR(40) NOT NULL,
+    id INT NOT NULL,
+    customer_id INT  REFERENCES customer (id),
+
     category INT NOT NULL,
     traffic_type INT NOT NULL,
-    traffic_protocol INT,
-    processing_interval INT,
-    window_interval INT,
-    watch_percent INT,
-    threshold_percent INT,
-    threshold_value INT,
-    threshold_minimum INT,
-    locality_scope INT,
-    rps_low_comparison INT,
-    rps_high_comparison INT,
+    traffic_protocol INT NOT NULL,
+    processing_interval INT NOT NULL,
+    window_interval INT NOT NULL,
+    watch_percent INT NOT NULL,
+    threshold_percent INT NOT NULL,
+    threshold_value INT NOT NULL,
+    threshold_minimum INT NOT NULL,
+
+    rps_low_comparison INT NOT NULL,
+    rps_high_comparison INT NOT NULL,
+    locality_scope INT NOT NULL,
+    disable_processing BOOLEAN NOT NULL,
+    disable_triage BOOLEAN NOT NULL,
+
+    name VARCHAR(40) NOT NULL,
+    application VARCHAR(40) NOT NULL,
+    route_name VARCHAR(40),
     filter_status_codes VARCHAR(40),
     status_codes VARCHAR(40),
-    metric_name VARCHAR(40),
-    metric_name_secondary VARCHAR(40),
-    function_name VARCHAR(40),
-    disable_processing BOOLEAN,
-    disable_triage BOOLEAN,
+
     created_ts TIMESTAMP(6) NOT NULL,
-    updated_ts TIMESTAMP(6) NOT NULL,
-    PRIMARY KEY(id)
+    changed_ts TIMESTAMP(6),
+    PRIMARY KEY(id,customer_id,name)
 );
 
 DROP TABLE IF EXISTS slo_entry_log;
 
 CREATE TABLE slo_entry_log (
-    id INT,
+    id INT NOT NULL,
     slo_entry_id INT NOT NULL,
     name VARCHAR(40) NOT NULL,
-    operation TEXT NOT NULL,
+    operation VARCHAR(40) NOT NULL,
     changed_ts TIMESTAMP(6) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id,slo_entry_id)
 );

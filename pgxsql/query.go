@@ -79,13 +79,13 @@ func Query(ctx context.Context, sql string, arguments ...any) (Rows, error) {
 		return fse.ProcessContent[Rows](ctx)
 	}
 	if dbClient == nil {
-		err := errors.New("error on database query call : dbClient is nil")
+		err := errors.New("error on PostgreSQL database query call: dbClient is nil")
 		logxt.LogPrintf("%v", err)
 		return nil, err
 	}
 	pgxRows, err := dbClient.Query(ctx, sql, arguments)
 	if err != nil {
-		logxt.LogPrintf("Error on queryv1 : %v", err)
+		logxt.LogPrintf("error on PostgreSQL database query call: %v", err)
 		return nil, err
 	}
 	return &rows{pgxRows: pgxRows, fd: fieldDescriptions(pgxRows.FieldDescriptions())}, nil

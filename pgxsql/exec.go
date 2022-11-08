@@ -16,14 +16,28 @@ func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, error)
 		return fse.ProcessContent[CommandTag](ctx)
 	}
 	if dbClient == nil {
-		err := errors.New("error on database execution call : dbClient is nil")
+		err := errors.New("error on PostgreSQL exec call : dbClient is nil")
 		logxt.LogPrintf("%v", err)
 		return CommandTag{}, err
 	}
-	// TODO : transaction processing.
+	// Transaction processing.
+	txn, err0 := dbClient.Begin(ctx)
+	if err0 != nil {
+		logxt.LogPrintf("error on PostgreSQL begin transaction : %v", err0)
+		return CommandTag{}, err0
+	}
 	t, err := dbClient.Exec(ctx, sql, arguments)
 	if err != nil {
-		logxt.LogPrintf("error on database execution call : %v", err)
+		logxt.LogPrintf("error on PostgreSQL exec call : %v", err)
+		err0 := txn.Rollback(ctx)
+		if err0 != nil {
+			logxt.LogPrintf("error on PostgreSQL rollback transaction call : %v", err0)
+		}
+		return CommandTag{}, err
+	}
+	err = txn.Commit(ctx)
+	if err != nil {
+		logxt.LogPrintf("error on PostgreSQL commit transaction call : %v", err)
 		return CommandTag{}, err
 	}
 	return CommandTag{Sql: t.String(), RowsAffected: t.RowsAffected()}, nil
