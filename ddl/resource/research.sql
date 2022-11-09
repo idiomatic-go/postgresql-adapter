@@ -14,4 +14,10 @@ alter table public.person
 ALTER USER postgres PASSWORD 'mypassword';
 
 created_at timestamp default now(): This final column definition will provide us with some extra meta-information
-    about their user. If not specified explicitly, the created_at timestamp will default to the time the row was inserted.
+    about their user. If not specified explicitly, the created_at timestamp will default to the time the row was
+    inserted.
+
+INSERT INTO products (product_no, name, price) VALUES
+    (1, 'Cheese', 9.99),
+    (2, 'Bread', 1.99),
+    (3, 'Milk', 2.99);
