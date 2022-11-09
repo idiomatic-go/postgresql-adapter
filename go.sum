@@ -2,6 +2,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/idiomatic-go/common-lib v0.0.0-20221108153743-dafdad0fc971 h1:PVFC36Yg9g+7JvzT9G8Mj5oxmcxNMslC3lO8N+5fR3I=
 github.com/idiomatic-go/common-lib v0.0.0-20221108153743-dafdad0fc971/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
+github.com/idiomatic-go/common-lib v0.0.0-20221109195527-0c7d1f049c8d h1:ZevwdeAnQCLZOSMRkfXms7UqwY6gF2qxuZ/ttiZ8K5c=
+github.com/idiomatic-go/common-lib v0.0.0-20221109195527-0c7d1f049c8d/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=
 github.com/jackc/pgpassfile v1.0.0/go.mod h1:CEx0iS5ambNFdcRtxPj5JhEz+xB6uRky5eyVu/W2HEg=
 github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b h1:C8S2+VttkHFdOOCXJe+YGfa4vHYwlt4Zx+IVXQ97jYg=

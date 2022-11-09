@@ -8,8 +8,8 @@ import (
 func ExampleQuery() {
 	ctx := fse.ContextWithContent(nil, fsys, "resource/error.txt")
 
-	rows, err := Query(ctx, ExecContentSql)
-	fmt.Printf("Error  : %v\n", err)
+	rows, sc := Query(ctx, ExecContentSql)
+	fmt.Printf("Error  : %v\n", sc)
 	fmt.Printf("Rows   : %v\n", rows)
 
 	//Output:
@@ -21,8 +21,8 @@ func ExampleQuery() {
 func ExampleQueryInvalidContent() {
 	ctx := fse.ContextWithContent(nil, fsys, "resource/rows.json")
 
-	rows, err := Query(ctx, ExecContentSql)
-	fmt.Printf("Error  : %v\n", err)
+	rows, sc := Query(ctx, ExecContentSql)
+	fmt.Printf("Error  : %v\n", sc)
 	fmt.Printf("Rows   : %v\n", rows)
 
 	//Output:

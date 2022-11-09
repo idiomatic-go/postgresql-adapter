@@ -5,26 +5,30 @@ import (
 	"errors"
 	"github.com/idiomatic-go/common-lib/fse"
 	"github.com/idiomatic-go/common-lib/logxt"
+	"github.com/idiomatic-go/common-lib/util"
 )
 
-type execFn func(ctx context.Context, sql string, arguments ...any) (CommandTag, error)
+//type execFn func(ctx context.Context, sql string, arguments ...any) (CommandTag, error)
+//var overrideExec execFn
+//func nilExec(ctx context.Context, sql string, arguments ...any) (CommandTag, error) {
+//	return CommandTag{}, nil
+//}
 
-var overrideExec execFn
-
-func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, error) {
+func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, util.StatusCode) {
 	if sql == ExecContentSql {
-		return fse.ProcessContent[CommandTag](ctx)
+		tag, err := fse.ProcessContent[CommandTag](ctx)
+		return tag, util.NewStatusInvalidArgument(err)
 	}
 	if dbClient == nil {
-		err := errors.New("error on PostgreSQL exec call : dbClient is nil")
-		logxt.LogPrintf("%v", err)
-		return CommandTag{}, err
+		sc := util.NewStatusInvalidArgument(errors.New("error on PostgreSQL exec call : dbClient is nil"))
+		logxt.LogPrintf("%v", sc)
+		return CommandTag{}, sc
 	}
 	// Transaction processing.
 	txn, err0 := dbClient.Begin(ctx)
 	if err0 != nil {
 		logxt.LogPrintf("error on PostgreSQL begin transaction : %v", err0)
-		return CommandTag{}, err0
+		return CommandTag{}, util.NewStatusError(err0)
 	}
 	t, err := dbClient.Exec(ctx, sql, arguments)
 	if err != nil {
@@ -33,16 +37,12 @@ func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, error)
 		if err0 != nil {
 			logxt.LogPrintf("error on PostgreSQL rollback transaction call : %v", err0)
 		}
-		return CommandTag{}, err
+		return CommandTag{}, util.NewStatusError(err)
 	}
 	err = txn.Commit(ctx)
 	if err != nil {
 		logxt.LogPrintf("error on PostgreSQL commit transaction call : %v", err)
-		return CommandTag{}, err
+		return CommandTag{}, util.NewStatusError(err)
 	}
-	return CommandTag{Sql: t.String(), RowsAffected: t.RowsAffected()}, nil
-}
-
-func nilExec(ctx context.Context, sql string, arguments ...any) (CommandTag, error) {
-	return CommandTag{}, nil
+	return CommandTag{Sql: t.String(), RowsAffected: t.RowsAffected()}, util.NewStatusOk()
 }
