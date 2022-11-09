@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/idiomatic-go/common-lib/fse"
 	"github.com/idiomatic-go/common-lib/logxt"
+	"github.com/idiomatic-go/common-lib/util"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -74,21 +75,22 @@ type queryFn func(ctx context.Context, sql string, arguments ...any) (Rows, erro
 
 var overrideQuery queryFn
 
-func Query(ctx context.Context, sql string, arguments ...any) (Rows, error) {
+func Query(ctx context.Context, sql string, arguments ...any) (Rows, util.StatusCode) {
 	if sql == ExecContentSql {
-		return fse.ProcessContent[Rows](ctx)
+		tag, err := fse.ProcessContent[Rows](ctx)
+		return tag, util.NewStatusInvalidArgument(err)
 	}
 	if dbClient == nil {
-		err := errors.New("error on PostgreSQL database query call: dbClient is nil")
-		logxt.LogPrintf("%v", err)
-		return nil, err
+		sc := util.NewStatusInvalidArgument(errors.New("error on PostgreSQL database query call: dbClient is nil"))
+		logxt.LogPrintf("%v", sc)
+		return nil, sc
 	}
 	pgxRows, err := dbClient.Query(ctx, sql, arguments)
 	if err != nil {
 		logxt.LogPrintf("error on PostgreSQL database query call: %v", err)
-		return nil, err
+		return nil, util.NewStatusError(err)
 	}
-	return &rows{pgxRows: pgxRows, fd: fieldDescriptions(pgxRows.FieldDescriptions())}, nil
+	return &rows{pgxRows: pgxRows, fd: fieldDescriptions(pgxRows.FieldDescriptions())}, util.NewStatusOk()
 }
 
 func nilQuery(ctx context.Context, sql string, arguments ...any) (Rows, error) {
