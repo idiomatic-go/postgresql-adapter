@@ -1,5 +1,5 @@
-CREATE TRIGGER customer_changes
+CREATE TRIGGER msre.customer_changes
     AFTER INSERT, UPDATE, DELETE
-    ON customer
+    ON msre.customer
     FOR EACH ROW
-    EXECUTE PROCEDURE LogCustomerChanges();
+    EXECUTE PROCEDURE msre.LogCustomerChanges();

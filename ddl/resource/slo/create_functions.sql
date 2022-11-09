@@ -15,7 +15,7 @@ RETURN NULL;
 END;
 $$
 
-CREATE OR REPLACE FUNCTION GetSLOEntry(id int)
+CREATE OR REPLACE FUNCTION msre.GetSLOEntry(id int)
   RETURNS SET OF slo_entry
   LANGUAGE PLPGSQL
   AS
@@ -27,7 +27,7 @@ BEGIN
 END;
 $$
 
-CREATE OR REPLACE FUNCTION GetSLOEntryByName(name varchar(40))
+CREATE OR REPLACE FUNCTION msre.GetSLOEntryByName(customerId int,name varchar(40))
   RETURNS SET OF slo_entry
   LANGUAGE PLPGSQL
   AS
@@ -35,11 +35,11 @@ $$
 BEGIN
     SELECT *
     FROM slo_entry e
-    WHERE e.name = name
+    WHERE e.customer_id = customerId AND e.name = name
 END;
 $$
 
-CREATE OR REPLACE FUNCTION GetSLOEntryBySegment(segments int, remainder int)
+CREATE OR REPLACE FUNCTION msre.GetSLOEntryBySegment(segments int, remainder int)
   RETURNS SET OF slo_entry
   LANGUAGE PLPGSQL
   AS

@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS slo_entry;
+DROP TABLE IF EXISTS msre.slo_entry;
 
-CREATE TABLE slo_entry(
+CREATE TABLE msre.slo_entry(
     id INT NOT NULL,
     customer_id INT  REFERENCES customer (id),
 
@@ -26,18 +26,18 @@ CREATE TABLE slo_entry(
     filter_status_codes VARCHAR(40),
     status_codes VARCHAR(40),
 
-    created_ts TIMESTAMP(6) NOT NULL,
-    changed_ts TIMESTAMP(6),
+    created_ts TIMESTAMP(4) DEFAULT now(),
+    changed_ts TIMESTAMP(4),
     PRIMARY KEY(id,customer_id,name)
 );
 
-DROP TABLE IF EXISTS slo_entry_log;
+DROP TABLE IF EXISTS msre.slo_entry_log;
 
-CREATE TABLE slo_entry_log (
+CREATE TABLE msre.slo_entry_log (
     id INT NOT NULL,
     slo_entry_id INT NOT NULL,
     name VARCHAR(40) NOT NULL,
     operation VARCHAR(40) NOT NULL,
-    changed_ts TIMESTAMP(6) NOT NULL,
+    changed_ts TIMESTAMP(4) DEFAULT now(),
     PRIMARY KEY(id,slo_entry_id)
 );

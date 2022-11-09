@@ -29,12 +29,12 @@ var clientStartup vhost.MessageHandler = func(msg vhost.Message) {
 		vhost.SendErrorResponse(Uri)
 		return
 	}
-	if !StartupDirect(credentials, m) {
+	if !StartupDirect(m, credentials) {
 		vhost.SendErrorResponse(Uri)
 	}
 }
 
-func StartupDirect(credentials vhost.Credentials, config map[string]string) bool {
+func StartupDirect(config map[string]string, credentials vhost.Credentials) bool {
 	url, ok := config[DatabaseURLKey]
 	if !ok || url == "" {
 		logxt.LogPrintf("database URL does not exist in map, or value is empty : %v", DatabaseURLKey)
@@ -84,5 +84,3 @@ func connectString(url string, credentials vhost.Credentials) string {
 	}
 	return fmt.Sprintf(url, username, password)
 }
-
-

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION LogCustomerChanges()
+CREATE OR REPLACE FUNCTION msre.LogCustomerChanges()
   RETURNS TRIGGER
   LANGUAGE PLPGSQL
   AS
@@ -15,7 +15,7 @@ RETURN NULL;
 END;
 $$
 
-CREATE OR REPLACE FUNCTION GetCustomer(id int)
+CREATE OR REPLACE FUNCTION msre.GetCustomer(id int)
   RETURNS SET OF customer
   LANGUAGE PLPGSQL
   AS
@@ -27,7 +27,7 @@ BEGIN
 END;
 $$
 
-CREATE OR REPLACE FUNCTION GetCustomerByOrg(id int,org_id varchar(40))
+CREATE OR REPLACE FUNCTION msre.GetCustomerByOrg(id int,org_id varchar(40))
   RETURNS SET OF customer
   LANGUAGE PLPGSQL
   AS
@@ -39,7 +39,7 @@ BEGIN
 END;
 $$
 
-CREATE OR REPLACE FUNCTION GetCustomerBySegment(segments int, remainder int)
+CREATE OR REPLACE FUNCTION msre.GetCustomerBySegment(segments int, remainder int)
   RETURNS SET OF customer
   LANGUAGE PLPGSQL
   AS

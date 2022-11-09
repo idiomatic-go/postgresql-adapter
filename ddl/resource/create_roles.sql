@@ -4,4 +4,4 @@ CREATE ROLE cust_servicing
 
 CREATE ROLE markb INHERIT
 WITH LOGIN
-PASSWORD 'mark#$pswd';
+PASSWORD 'mark1971#$pswd';

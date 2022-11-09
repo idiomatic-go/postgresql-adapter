@@ -1,14 +1,14 @@
-package slo
+package dml
 
 const (
-	GetSLOEntryFn = "GetSLOEntry"
+	GetSLOEntryStmt       = "SELECT * FROM GetSLOEntry($1)"
+	GetSLOEntryByNameStmt = "SELECT * FROM GetSLOEntryByName($1,$2)"
+
 	// nextval('slo_entry_id')
 	EntryInsertStmt       = "INSERT INTO slo (id,customer_id,category,traffic_type,traffic_protocol,processing_interval,window_interval,watch_percent,threshold_percent,threshold_value,threshold_minimum,rps_low_comparison,rps_high_comparison,locality_scope,disable_processing,disable_triage,name,application,route_name,filter_status_codes,status_codes,created_ts) VALUES"
 	EntryDeleteStmt       = "DELETE FROM slo WHERE id = $1"
 	EntryDeleteByNameStmt = "DELETE FROM slo WHERE id = $1 AND name = $2"
 
-	Id              = "id"
-	CustomerId      = "customer_id"
 	Category        = "category"
 	TrafficType     = "traffic_type"
 	TrafficProtocol = "traffic_protocol"
@@ -32,7 +32,4 @@ const (
 	Name              = "name"
 	Application       = "application"
 	RouteName         = "route_name"
-
-	CreatedTS = "created_ts"
-	ChangedTS = "changed_ts"
 )

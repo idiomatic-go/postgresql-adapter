@@ -1,4 +1,4 @@
-DROP INDEX IF EXISTS idx_slo_entry_name
+DROP INDEX IF EXISTS msre.idx_slo_entry_name
 
-CREATE UNIQUE INDEX idx_slo_entry_name
-    ON slo_entry(name);
+CREATE UNIQUE INDEX msre.idx_slo_entry_name
+    ON msre.slo_entry(name);

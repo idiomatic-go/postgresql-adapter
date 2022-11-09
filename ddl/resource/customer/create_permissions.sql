@@ -1,27 +1,27 @@
 /* Customer - tables */
 GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER
-    ON customer
+    ON msre.customer
     TO customer_servicing;
 
 GRANT SELECT, INSERT, UPDATE, DELETE
-    ON customer_log
+    ON msre.customer_log
     TO customer_servicing;
 
 /* Customer - sequences */
 GRANT USAGE, SELECT, UPDATE
-    ON customer_id
+    ON msre.customer_id
     TO customer_servicing;
 
 GRANT USAGE, SELECT, UPDATE
-    ON customer_log_id
+    ON msre.customer_log_id
     TO customer_servicing;
 
 GRANT USAGE, SELECT, UPDATE
-    ON customer_locality_id
+    ON msre.customer_locality_id
     TO customer_servicing;
 
 GRANT USAGE, SELECT, UPDATE
-    ON customer_metric_id
+    ON msre.customer_metric_id
     TO customer_servicing;
 
 /* Customer - role */
