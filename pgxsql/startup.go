@@ -17,7 +17,7 @@ func startup(msg vhost.Message) {
 }
 
 func shutdown() {
-	clientShutdown()
+	ClientShutdown()
 }
 
 func receive() {

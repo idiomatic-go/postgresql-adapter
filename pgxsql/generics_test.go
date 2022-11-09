@@ -1,4 +1,4 @@
-package queryv1
+package pgxsql
 
 import "fmt"
 

@@ -1,11 +1,7 @@
-package queryv1
-
-import (
-	"github.com/idiomatic-go/postgresql-adapter/pgxsql"
-)
+package pgxsql
 
 type CollectableRow interface {
-	FieldDescriptions() []pgxsql.FieldDescription
+	FieldDescriptions() []FieldDescription
 	Scan(dest ...any) error
 	Values() ([]any, error)
 	RawValues() [][]byte
@@ -15,7 +11,7 @@ type CollectableRow interface {
 type RowToFunc[T any] func(row CollectableRow) (T, error)
 
 // CollectRows iterates through rows, calling fn for each row, and collecting the results into a slice of T.
-func CollectRows[T any](rows pgxsql.Rows, fn RowToFunc[T]) ([]T, error) {
+func CollectRows[T any](rows Rows, fn RowToFunc[T]) ([]T, error) {
 	defer rows.Close()
 
 	slice := []T{}
