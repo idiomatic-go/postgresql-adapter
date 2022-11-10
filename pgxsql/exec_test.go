@@ -4,28 +4,29 @@ import (
 	"embed"
 	"fmt"
 	"github.com/idiomatic-go/common-lib/fse"
+	"github.com/idiomatic-go/common-lib/util"
 )
 
 //go:embed resource/*
-var fsys embed.FS
+var fs embed.FS
 
 func ExampleExec() {
-	ctx := fse.ContextWithContent(nil, fsys, "resource/error.txt")
+	ctx := fse.ContextWithContent(nil, fs, "resource/error.txt")
 
 	cmd, sc := Exec(ctx, ExecContentSql)
-	fmt.Printf("Error  : %v\n", sc)
+	fmt.Printf("Error  : %v\n", util.NilEmpty(sc.Error()))
 	fmt.Printf("CmdTag : %v\n", cmd)
 
-	ctx = fse.ContextWithContent(nil, fsys, "resource/command-tag.json")
+	ctx = fse.ContextWithContent(nil, fs, "resource/command-tag.json")
 
 	cmd, sc = Exec(ctx, ExecContentSql)
-	fmt.Printf("Error  : %v\n", sc)
+	fmt.Printf("Error  : %v\n", util.NilEmpty(sc.Error()))
 	fmt.Printf("CmdTag : %v\n", cmd)
 
 	//Output:
 	//Error  : example error text
 	//CmdTag : { 0 <nil>}
-	//Error  :
+	//Error  : <nil>
 	//CmdTag : {select * 1000 <nil>}
 
 }

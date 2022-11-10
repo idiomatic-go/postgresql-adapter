@@ -37,7 +37,7 @@ func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, util.S
 		if err0 != nil {
 			logxt.LogPrintf("error on PostgreSQL rollback transaction call : %v", err0)
 		}
-		return CommandTag{}, util.NewStatusError(err)
+		return CommandTag{}, util.NewStatusError(err, err0)
 	}
 	err = txn.Commit(ctx)
 	if err != nil {

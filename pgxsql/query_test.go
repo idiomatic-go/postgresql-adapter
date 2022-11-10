@@ -6,7 +6,7 @@ import (
 )
 
 func ExampleQuery() {
-	ctx := fse.ContextWithContent(nil, fsys, "resource/error.txt")
+	ctx := fse.ContextWithContent(nil, fs, "resource/error.txt")
 
 	rows, sc := Query(ctx, ExecContentSql)
 	fmt.Printf("Error  : %v\n", sc)
@@ -19,7 +19,7 @@ func ExampleQuery() {
 }
 
 func ExampleQueryInvalidContent() {
-	ctx := fse.ContextWithContent(nil, fsys, "resource/rows.json")
+	ctx := fse.ContextWithContent(nil, fs, "resource/rows.json")
 
 	rows, sc := Query(ctx, ExecContentSql)
 	fmt.Printf("Error  : %v\n", sc)
