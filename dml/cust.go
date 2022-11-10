@@ -1,7 +1,9 @@
 package dml
 
 const (
-	GetCustomerFn = "SELECT * FROM GetCustomer($1)"
+	GetCustomerStmt      = "SELECT * FROM GetCustomer($1)"
+	GetCustomerByOrgStmt = "SELECT * FROM GetCustomerByOrg($1,$2)"
+
 	//CustomerInsertStmt       = "INSERT INTO customer (nextval('customer_id'),org_activity,track_activity,created_ts) VALUES"
 
 	CustomerInsertStmt = "INSERT INTO customer (id,org_activity,track_activity,created_ts) VALUES"

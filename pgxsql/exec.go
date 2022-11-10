@@ -8,14 +8,10 @@ import (
 	"github.com/idiomatic-go/common-lib/util"
 )
 
-//type execFn func(ctx context.Context, sql string, arguments ...any) (CommandTag, error)
-//var overrideExec execFn
-//func nilExec(ctx context.Context, sql string, arguments ...any) (CommandTag, error) {
-//	return CommandTag{}, nil
-//}
+var execContentOverride = false
 
 func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, util.StatusCode) {
-	if sql == ExecContentSql {
+	if execContentOverride {
 		tag, err := fse.ProcessContent[CommandTag](ctx)
 		return tag, util.NewStatusInvalidArgument(err)
 	}

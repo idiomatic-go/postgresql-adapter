@@ -71,12 +71,10 @@ func (r *rows) RawValues() [][]byte {
 	return r.pgxRows.RawValues()
 }
 
-type queryFn func(ctx context.Context, sql string, arguments ...any) (Rows, error)
-
-var overrideQuery queryFn
+var queryContentOverride = false
 
 func Query(ctx context.Context, sql string, arguments ...any) (Rows, util.StatusCode) {
-	if sql == ExecContentSql {
+	if queryContentOverride {
 		tag, err := fse.ProcessContent[Rows](ctx)
 		return tag, util.NewStatusInvalidArgument(err)
 	}
@@ -91,10 +89,6 @@ func Query(ctx context.Context, sql string, arguments ...any) (Rows, util.Status
 		return nil, util.NewStatusError(err)
 	}
 	return &rows{pgxRows: pgxRows, fd: fieldDescriptions(pgxRows.FieldDescriptions())}, util.NewStatusOk()
-}
-
-func nilQuery(ctx context.Context, sql string, arguments ...any) (Rows, error) {
-	return nil, nil
 }
 
 func fieldDescriptions(fields []pgconn.FieldDescription) []FieldDescription {
