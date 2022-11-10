@@ -1,13 +1,5 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
-github.com/idiomatic-go/common-lib v0.0.0-20221108153743-dafdad0fc971 h1:PVFC36Yg9g+7JvzT9G8Mj5oxmcxNMslC3lO8N+5fR3I=
-github.com/idiomatic-go/common-lib v0.0.0-20221108153743-dafdad0fc971/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
-github.com/idiomatic-go/common-lib v0.0.0-20221109195527-0c7d1f049c8d h1:ZevwdeAnQCLZOSMRkfXms7UqwY6gF2qxuZ/ttiZ8K5c=
-github.com/idiomatic-go/common-lib v0.0.0-20221109195527-0c7d1f049c8d/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
-github.com/idiomatic-go/common-lib v0.0.0-20221109204233-63184696521a h1:P8xt1cxXiaS/zYspEF0lyT/Vj4ao5FNz3+6gBmaPyeE=
-github.com/idiomatic-go/common-lib v0.0.0-20221109204233-63184696521a/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
-github.com/idiomatic-go/common-lib v0.0.0-20221110111700-de2e192401c4 h1:az45+IYrS2754PCA+bTxI5bPyWLW5vnchgBXOzZhEPE=
-github.com/idiomatic-go/common-lib v0.0.0-20221110111700-de2e192401c4/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/idiomatic-go/common-lib v0.0.0-20221110131142-ab5c327058f8 h1:YkW1Hgmf5zTjB8IJKzQB5IivuG5l/ouhBihKynQ1vRQ=
 github.com/idiomatic-go/common-lib v0.0.0-20221110131142-ab5c327058f8/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=
