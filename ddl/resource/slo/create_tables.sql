@@ -20,11 +20,11 @@ CREATE TABLE msre.slo_entry(
     disable_processing BOOLEAN NOT NULL,
     disable_triage BOOLEAN NOT NULL,
 
+    filter_status_codes VARCHAR(40),
+    status_codes VARCHAR(40),
     name VARCHAR(40) NOT NULL,
     application VARCHAR(40) NOT NULL,
     route_name VARCHAR(40),
-    filter_status_codes VARCHAR(40),
-    status_codes VARCHAR(40),
 
     created_ts TIMESTAMP(4) DEFAULT now(),
     changed_ts TIMESTAMP(4),
