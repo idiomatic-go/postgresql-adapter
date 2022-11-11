@@ -3,7 +3,7 @@ module github.com/idiomatic-go/postgresql-adapter
 go 1.18
 
 require (
-	github.com/idiomatic-go/common-lib v0.0.0-20221110131142-ab5c327058f8
+	github.com/idiomatic-go/common-lib v0.0.0-20221111130347-452da4835f9e
 	github.com/jackc/pgx/v5 v5.0.2
 )
 

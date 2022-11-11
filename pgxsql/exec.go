@@ -6,9 +6,27 @@ import (
 	"github.com/idiomatic-go/common-lib/fse"
 	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/util"
+	"github.com/idiomatic-go/postgresql-adapter/dml"
 )
 
 var execContentOverride = false
+
+// TODO : verify string data to prevent SQL injection attacks
+//        can/is this being done automatically via PostgreSQL?
+
+func ExecInsert(ctx context.Context, insert string, nextId string, attrs ...util.Attr) (CommandTag, util.StatusCode) {
+	if len(attrs) == 0 {
+		return CommandTag{}, util.NewStatusInvalidArgument(errors.New("invalid argument: insert attributes list is empty"))
+	}
+	return Exec(ctx, dml.WriteInsert(insert, nextId, attrs))
+}
+
+func ExecUpdate(ctx context.Context, update string, where string, attrs ...util.Attr) (CommandTag, util.StatusCode) {
+	if len(attrs) == 0 {
+		return CommandTag{}, util.NewStatusInvalidArgument(errors.New("invalid argument: update attributes list is empty"))
+	}
+	return Exec(ctx, dml.WriteUpdate(update, where, attrs))
+}
 
 func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, util.StatusCode) {
 	if execContentOverride {
