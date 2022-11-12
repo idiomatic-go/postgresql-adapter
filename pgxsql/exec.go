@@ -25,11 +25,11 @@ func ExecInsert(ctx context.Context, sql string, values []any) (CommandTag, util
 	return Exec(ctx, stmt)
 }
 
-func ExecUpdate(ctx context.Context, sql string, attrs ...util.Attr) (CommandTag, util.StatusCode) {
+func ExecUpdate(ctx context.Context, sql string, attrs []util.Attr, where []util.Attr) (CommandTag, util.StatusCode) {
 	if len(attrs) == 0 {
 		return CommandTag{}, util.NewStatusInvalidArgument(errors.New("invalid argument: update attributes list is empty"))
 	}
-	stmt, sc := dml.WriteUpdate(sql, attrs)
+	stmt, sc := dml.WriteUpdate(sql, attrs, where)
 	if !sc.Ok() {
 		return CommandTag{}, sc
 	}

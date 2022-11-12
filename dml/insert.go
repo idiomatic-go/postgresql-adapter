@@ -3,6 +3,7 @@ package dml
 import (
 	"errors"
 	"fmt"
+	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"reflect"
@@ -36,7 +37,9 @@ func WriteInsert(sql string, values []any) (string, util.StatusCode) {
 func WriteInsertValues(sb *strings.Builder, values []any) util.StatusCode {
 	max := len(values) - 1
 	if max < 0 {
-		return util.NewStatusInvalidArgument(errors.New("invalid insert argument, values slice is empty"))
+		sc := util.NewStatusInvalidArgument(errors.New("invalid insert argument, values slice is empty"))
+		logxt.LogPrintf("%v", sc)
+		return sc
 	}
 	sb.WriteString("(")
 	for i, v := range values {
@@ -49,6 +52,7 @@ func WriteInsertValues(sb *strings.Builder, values []any) util.StatusCode {
 			} else {
 				sc := sql.SanitizeString(v.(string))
 				if !sc.Ok() {
+					logxt.LogPrintf("%v", sc)
 					return sc
 				}
 				sb.WriteString(fmt.Sprintf(stringFmt, v.(string)))

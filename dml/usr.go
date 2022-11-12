@@ -16,7 +16,7 @@ const (
 	GetSLOEntryLogStmt       = "SELECT * FROM GetSLOEntryLog($1,$2)"
 
 	InsertSLOEntryStmt       = "INSERT INTO slo_entry (id,customer_id,category,traffic_type,traffic_protocol,processing_interval,window_interval,watch_percent,threshold_percent,threshold_value,threshold_minimum,rps_low_comparison,rps_high_comparison,locality_scope,disable_processing,disable_triage,name,application,route_name,filter_status_codes,status_codes) VALUES"
-	UpdateSLOEntryStmt       = "UPDATE slo_entry $1  WHERE customerId = $1 AND name = $2"
+	UpdateSLOEntryStmt       = "UPDATE slo_entry {sql} WHERE customerId = $1 AND name = $2"
 	DeleteSLOEntryByNameStmt = "DELETE FROM slo_entry WHERE customerId = $1 AND name = $2"
 
 	SLOEntryNextValFn = "nextval('slo_entry_Id')"
