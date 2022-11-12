@@ -1,7 +1,9 @@
 package dml
 
 import (
+	"errors"
 	"fmt"
+	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"reflect"
 	"strings"
@@ -21,21 +23,20 @@ INSERT INTO table_name (column_list) VALUES
 
 */
 
-func WriteInsert(sql string, values []any) string {
+func WriteInsert(sql string, values []any) (string, util.StatusCode) {
 	sb := strings.Builder{}
 
 	sb.WriteString(sql)
 	sb.WriteString("\n")
-	WriteInsertValues(&sb, values)
+	sc := WriteInsertValues(&sb, values)
 	sb.WriteString(";\n")
-	return sb.String()
+	return sb.String(), sc
 }
 
-func WriteInsertValues(sb *strings.Builder, values []any) {
-	// TODO : Check for Function in the attr value field
+func WriteInsertValues(sb *strings.Builder, values []any) util.StatusCode {
 	max := len(values) - 1
 	if max < 0 {
-		return
+		return util.NewStatusInvalidArgument(errors.New("invalid insert argument, values slice is empty"))
 	}
 	sb.WriteString("(")
 	for i, v := range values {
@@ -46,8 +47,11 @@ func WriteInsertValues(sb *strings.Builder, values []any) {
 			if _, function := v.(sql.Function); function {
 				sb.WriteString(fmt.Sprintf(valueFmt, v))
 			} else {
-				safe := sql.Sanitize(v.(string))
-				sb.WriteString(fmt.Sprintf(stringFmt, safe))
+				sc := sql.SanitizeString(v.(string))
+				if !sc.Ok() {
+					return sc
+				}
+				sb.WriteString(fmt.Sprintf(stringFmt, v.(string)))
 			}
 		}
 		if i < max {
@@ -55,4 +59,5 @@ func WriteInsertValues(sb *strings.Builder, values []any) {
 		}
 	}
 	sb.WriteString(")")
+	return util.NewStatusOk()
 }

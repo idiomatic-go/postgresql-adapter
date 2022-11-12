@@ -18,14 +18,22 @@ func ExecInsert(ctx context.Context, sql string, values []any) (CommandTag, util
 	if len(values) == 0 {
 		return CommandTag{}, util.NewStatusInvalidArgument(errors.New("invalid argument: insert attributes list is empty"))
 	}
-	return Exec(ctx, dml.WriteInsert(sql, values))
+	stmt, sc := dml.WriteInsert(sql, values)
+	if !sc.Ok() {
+		return CommandTag{}, sc
+	}
+	return Exec(ctx, stmt)
 }
 
 func ExecUpdate(ctx context.Context, sql string, attrs ...util.Attr) (CommandTag, util.StatusCode) {
 	if len(attrs) == 0 {
 		return CommandTag{}, util.NewStatusInvalidArgument(errors.New("invalid argument: update attributes list is empty"))
 	}
-	return Exec(ctx, dml.WriteUpdate(sql, attrs))
+	stmt, sc := dml.WriteUpdate(sql, attrs)
+	if !sc.Ok() {
+		return CommandTag{}, sc
+	}
+	return Exec(ctx, stmt)
 }
 
 func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, util.StatusCode) {

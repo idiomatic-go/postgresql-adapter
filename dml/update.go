@@ -14,7 +14,7 @@ WHERE condition;
 
 */
 
-func WriteUpdate(sql string, attrs []util.Attr) string {
+func WriteUpdate(sql string, attrs []util.Attr) (string, util.StatusCode) {
 	var sb strings.Builder
 	where := sql
 
@@ -22,7 +22,7 @@ func WriteUpdate(sql string, attrs []util.Attr) string {
 	sb.WriteString("\n")
 	cond := WriteUpdateSet(sb, attrs)
 	WriteUpdateWhere(sb, where, cond)
-	return sb.String()
+	return sb.String(), util.NewStatusOk()
 }
 
 func WriteUpdateSet(sb strings.Builder, attrs []util.Attr) []util.Attr {
