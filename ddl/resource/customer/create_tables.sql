@@ -45,7 +45,7 @@ CREATE TABLE msre.customer_metric (
      name VARCHAR(40) NOT NULL,
      value INT NOT NULL,
      created_ts TIMESTAMP(4) DEFAULT now()NOT NULL,
-     changed_ts TIMESTAMP(4) ,
+     changed_ts TIMESTAMP(4),
      PRIMARY KEY(id,customer_id)
 );
 

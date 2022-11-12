@@ -14,10 +14,11 @@ WHERE condition;
 
 */
 
-func WriteUpdate(update string, where string, attrs []util.Attr) string {
+func WriteUpdate(sql string, attrs []util.Attr) string {
 	var sb strings.Builder
+	where := sql
 
-	sb.WriteString(update)
+	sb.WriteString(sql)
 	sb.WriteString("\n")
 	cond := WriteUpdateSet(sb, attrs)
 	WriteUpdateWhere(sb, where, cond)

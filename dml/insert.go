@@ -1,8 +1,15 @@
 package dml
 
 import (
-	"github.com/idiomatic-go/common-lib/util"
+	"fmt"
+	"github.com/idiomatic-go/postgresql-adapter/sql"
+	"reflect"
 	"strings"
+)
+
+const (
+	valueFmt  = "%v"
+	stringFmt = "'%v'"
 )
 
 /*
@@ -14,16 +21,38 @@ INSERT INTO table_name (column_list) VALUES
 
 */
 
-func WriteInsert(insert string, nextId string, attrs []util.Attr) string {
-	var sb strings.Builder
+func WriteInsert(sql string, values []any) string {
+	sb := strings.Builder{}
 
-	sb.WriteString(insert)
+	sb.WriteString(sql)
 	sb.WriteString("\n")
-	WriteInsertValues(sb, nextId, attrs)
-	sb.WriteString(";")
+	WriteInsertValues(&sb, values)
+	sb.WriteString(";\n")
 	return sb.String()
 }
 
-func WriteInsertValues(sb strings.Builder, nextId string, attrs []util.Attr) {
-
+func WriteInsertValues(sb *strings.Builder, values []any) {
+	// TODO : Check for Function in the attr value field
+	max := len(values) - 1
+	if max < 0 {
+		return
+	}
+	sb.WriteString("(")
+	for i, v := range values {
+		t := reflect.TypeOf(v)
+		if t.Kind() != reflect.String {
+			sb.WriteString(fmt.Sprintf(valueFmt, v))
+		} else {
+			if _, function := v.(sql.Function); function {
+				sb.WriteString(fmt.Sprintf(valueFmt, v))
+			} else {
+				safe := sql.Sanitize(v.(string))
+				sb.WriteString(fmt.Sprintf(stringFmt, safe))
+			}
+		}
+		if i < max {
+			sb.WriteString(",")
+		}
+	}
+	sb.WriteString(")")
 }

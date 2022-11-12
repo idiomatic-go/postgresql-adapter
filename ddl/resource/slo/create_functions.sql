@@ -50,3 +50,15 @@ BEGIN
     WHERE MOD(e.id,segments) = remainder
 END;
 $$
+
+CREATE OR REPLACE FUNCTION msre.GetSLOEntryLog(low timestamp, high timestamp)
+  RETURNS SET OF slo_entry
+  LANGUAGE PLPGSQL
+  AS
+$$
+BEGIN
+    SELECT *
+    FROM slo_entry_log l
+    WHERE l.change_ts > low AND l.change_ts <= high
+END;
+$$

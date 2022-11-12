@@ -14,18 +14,18 @@ var execContentOverride = false
 // TODO : verify string data to prevent SQL injection attacks
 //        can/is this being done automatically via PostgreSQL?
 
-func ExecInsert(ctx context.Context, insert string, nextId string, attrs ...util.Attr) (CommandTag, util.StatusCode) {
-	if len(attrs) == 0 {
+func ExecInsert(ctx context.Context, sql string, values []any) (CommandTag, util.StatusCode) {
+	if len(values) == 0 {
 		return CommandTag{}, util.NewStatusInvalidArgument(errors.New("invalid argument: insert attributes list is empty"))
 	}
-	return Exec(ctx, dml.WriteInsert(insert, nextId, attrs))
+	return Exec(ctx, dml.WriteInsert(sql, values))
 }
 
-func ExecUpdate(ctx context.Context, update string, where string, attrs ...util.Attr) (CommandTag, util.StatusCode) {
+func ExecUpdate(ctx context.Context, sql string, attrs ...util.Attr) (CommandTag, util.StatusCode) {
 	if len(attrs) == 0 {
 		return CommandTag{}, util.NewStatusInvalidArgument(errors.New("invalid argument: update attributes list is empty"))
 	}
-	return Exec(ctx, dml.WriteUpdate(update, where, attrs))
+	return Exec(ctx, dml.WriteUpdate(sql, attrs))
 }
 
 func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, util.StatusCode) {

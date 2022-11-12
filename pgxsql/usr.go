@@ -40,7 +40,7 @@ type Rows interface {
 	Next() bool
 
 	// Scan reads the values from the current row into dest values positionally.
-	// dest can include pointers to core types, values implementing the Scanner
+	// dest can include pointers to core sql, values implementing the Scanner
 	// interface, and nil. nil will skip the value entirely. It is an error to
 	// call Scan without first calling Next() and checking that it returned true.
 	Scan(dest ...any) error
