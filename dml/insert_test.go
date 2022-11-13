@@ -8,35 +8,39 @@ import (
 )
 
 func ExampleWriteInsert() {
-	stmt, sc := WriteInsert(InsertSLOEntryStmt, []any{100, "test string", false, sql.Function(SLOEntryNextValFn), sql.Function(ChangedTimestampFn)})
-	fmt.Printf("Stmt       : %v\n", stmt)
-	fmt.Printf("StatusCode : %v\n", sc.Ok())
+	stmt, err := WriteInsert(InsertSLOEntryStmt, []any{100, "test string", false, sql.Function(SLOEntryNextValFn), sql.Function(ChangedTimestampFn)})
+	fmt.Printf("Stmt    : %v\n", stmt)
+	fmt.Printf("Error   : %v\n", err)
 
 	//Output:
-	//fail
+	//Stmt    : INSERT INTO slo_entry (id,customer_id,category,traffic_type,traffic_protocol,processing_interval,window_interval,watch_percent,threshold_percent,threshold_value,threshold_minimum,rps_low_comparison,rps_high_comparison,locality_scope,disable_processing,disable_triage,name,application,route_name,filter_status_codes,status_codes) VALUES
+	//(100,'test string',false,nextval('slo_entry_Id'),now());
+	//
+	//
+	//Error   : <nil>
 }
 
 func ExampleWriteInsertValues() {
 	sb := strings.Builder{}
 
-	sc := WriteInsertValues(&sb, nil)
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sb.String()))
-	fmt.Printf("StatusCode : %v\n", sc.Ok())
+	err := WriteInsertValues(&sb, nil)
+	fmt.Printf("Stmt    : %v\n", util.NilEmpty(sb.String()))
+	fmt.Printf("Error   : %v\n", err)
 
 	sb1 := strings.Builder{}
-	sc = WriteInsertValues(&sb1, []any{100})
-	fmt.Printf("Stmt       : %v\n", sb1.String())
-	fmt.Printf("StatusCode : %v\n", sc.Ok())
+	err = WriteInsertValues(&sb1, []any{100})
+	fmt.Printf("Stmt    : %v\n", sb1.String())
+	fmt.Printf("Error   : %v\n", err)
 
-	sc = WriteInsertValues(&sb, []any{100, "test string", false, sql.Function(SLOEntryNextValFn), sql.Function(ChangedTimestampFn)})
-	fmt.Printf("Stmt       : %v\n", sb.String())
-	fmt.Printf("StatusCode : %v\n", sc.Ok())
+	err = WriteInsertValues(&sb, []any{100, "test string", false, sql.Function(SLOEntryNextValFn), sql.Function(ChangedTimestampFn)})
+	fmt.Printf("Stmt    : %v\n", sb.String())
+	fmt.Printf("Error   : %v\n", err)
 
 	//Output:
-	//Stmt       : <nil>
-	//StatusCode : false
-	//Stmt       : (100)
-	//StatusCode : true
-	//Stmt       : (100,'test string',false,nextval('slo_entry_Id'),now())
-	//StatusCode : true
+	//Stmt    : <nil>
+	//Error   : invalid insert argument, values slice is empty
+	//Stmt    : (100)
+	//Error   : <nil>
+	//Stmt    : (100,'test string',false,nextval('slo_entry_Id'),now())
+	//Error   : <nil>
 }

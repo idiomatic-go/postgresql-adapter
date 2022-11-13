@@ -2,8 +2,9 @@ package dml
 
 import (
 	"errors"
-	"github.com/idiomatic-go/common-lib/logxt"
+	"fmt"
 	"github.com/idiomatic-go/common-lib/util"
+	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"strings"
 )
 
@@ -16,54 +17,46 @@ WHERE condition;
 
 */
 
-func WriteUpdate(sql string, attrs []util.Attr, where []util.Attr) (string, util.StatusCode) {
+func WriteUpdate(sql string, attrs []util.Attr, where []util.Attr) (string, error) {
 	var sb strings.Builder
 
 	sb.WriteString(sql)
 	sb.WriteString("\n")
-	sc := writeUpdateSet(&sb, attrs)
-	if !sc.Ok() {
-		return "", sc
+	err := WriteUpdateSet(&sb, attrs[0])
+	if err != nil {
+		return "", err
 	}
-	sc = WriteUpdateWhere(&sb, where)
-	return sb.String(), sc
+	err = WriteUpdateWhere(&sb, where)
+	return sb.String(), err
 }
 
-func writeUpdateSet(sb *strings.Builder, attrs []util.Attr) util.StatusCode {
+func WriteUpdateWhere(sb *strings.Builder, attrs []util.Attr) error {
 	max := len(attrs) - 1
 	if max < 0 {
-		sc := util.NewStatusInvalidArgument(errors.New("invalid insert argument, attrs slice is empty"))
-		logxt.LogPrintf("%v", sc)
-		return sc
-	}
-	return util.NewStatusOk()
-}
-
-func writeUpdateWhere(sb *strings.Builder, attrs []util.Attr) util.StatusCode {
-	max := len(attrs) - 1
-	if max < 0 {
-		sc := util.NewStatusInvalidArgument(errors.New("invalid insert argument, attrs slice is empty"))
-		logxt.LogPrintf("%v", sc)
-		return sc
+		return errors.New("invalid insert argument, attrs slice is empty")
 	}
 	sb.WriteString("WHERE ")
 	for i, attr := range attrs {
-
+		s, err := sql.FmtAttr(attr)
+		if err != nil {
+			return err
+		}
+		sb.WriteString(s)
+		if i < max {
+			sb.WriteString(" AND ")
+		}
 	}
-	return util.NewStatusOk()
+	return nil
 }
 
-func writeSet(sb *strings.Builder, attr util.Attr) util.StatusCode {
+func WriteUpdateSet(sb *strings.Builder, attr util.Attr) error {
 	if attr.Name == "" {
-		sc := util.NewStatusInvalidArgument(errors.New("invalid set argument, attribute name is empty"))
-		logxt.LogPrintf("%v", sc)
-		return sc
+		return errors.New("invalid set argument, attribute name is empty")
 	}
-	if attr.Val == nil {
-		sc := util.NewStatusInvalidArgument(errors.New("invalid set argument, attribute value is nil"))
-		logxt.LogPrintf("%v", sc)
-		return sc
+	s, err := sql.FmtValue(attr.Val)
+	if err != nil {
+		return err
 	}
-
+	sb.WriteString(fmt.Sprintf("%v=%v", attr.Name, s))
+	return nil
 }
-
