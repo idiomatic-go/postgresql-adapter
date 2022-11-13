@@ -18,7 +18,7 @@ func FmtValue(v any) (string, error) {
 	}
 	// Process time.Time first
 	if t, ok := v.(time.Time); ok {
-		return FmtTimestamp(t), nil
+		return util.FmtTimestamp(t), nil
 	}
 	if t.Kind() != reflect.String {
 		return fmt.Sprintf(valueFmt, v), nil

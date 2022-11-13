@@ -2,10 +2,15 @@ package dml
 
 import (
 	"errors"
-	"fmt"
 	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"strings"
+)
+
+const (
+	where = "WHERE "
+	and   = " AND "
+	set   = "SET "
 )
 
 /*
@@ -22,7 +27,7 @@ func WriteUpdate(sql string, attrs []util.Attr, where []util.Attr) (string, erro
 
 	sb.WriteString(sql)
 	sb.WriteString("\n")
-	err := WriteUpdateSet(&sb, attrs[0])
+	err := WriteUpdateSet(&sb, attrs)
 	if err != nil {
 		return "", err
 	}
@@ -30,12 +35,12 @@ func WriteUpdate(sql string, attrs []util.Attr, where []util.Attr) (string, erro
 	return sb.String(), err
 }
 
-func WriteUpdateWhere(sb *strings.Builder, attrs []util.Attr) error {
+func WriteUpdateSet(sb *strings.Builder, attrs []util.Attr) error {
 	max := len(attrs) - 1
 	if max < 0 {
-		return errors.New("invalid insert argument, attrs slice is empty")
+		return errors.New("invalid update argument, attrs slice is empty")
 	}
-	sb.WriteString("WHERE ")
+	sb.WriteString(set)
 	for i, attr := range attrs {
 		s, err := sql.FmtAttr(attr)
 		if err != nil {
@@ -43,20 +48,29 @@ func WriteUpdateWhere(sb *strings.Builder, attrs []util.Attr) error {
 		}
 		sb.WriteString(s)
 		if i < max {
-			sb.WriteString(" AND ")
+			sb.WriteString(",\n")
 		}
 	}
+	sb.WriteString("\n")
 	return nil
 }
 
-func WriteUpdateSet(sb *strings.Builder, attr util.Attr) error {
-	if attr.Name == "" {
-		return errors.New("invalid set argument, attribute name is empty")
+func WriteUpdateWhere(sb *strings.Builder, attrs []util.Attr) error {
+	max := len(attrs) - 1
+	if max < 0 {
+		return errors.New("invalid insert argument, attrs slice is empty")
 	}
-	s, err := sql.FmtValue(attr.Val)
-	if err != nil {
-		return err
+	sb.WriteString(where)
+	for i, attr := range attrs {
+		s, err := sql.FmtAttr(attr)
+		if err != nil {
+			return err
+		}
+		sb.WriteString(s)
+		if i < max {
+			sb.WriteString(and)
+		}
 	}
-	sb.WriteString(fmt.Sprintf("%v=%v", attr.Name, s))
+	sb.WriteString(";")
 	return nil
 }
