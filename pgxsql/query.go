@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/idiomatic-go/common-lib/fse"
-	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/util"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -73,19 +72,16 @@ func (r *rows) RawValues() [][]byte {
 
 var queryContentOverride = false
 
-func Query(ctx context.Context, sql string, arguments ...any) (Rows, util.StatusCode) {
+func Query(ctx context.Context, sql string, arguments ...any) (Rows, util.Status) {
 	if queryContentOverride {
 		tag, err := fse.ProcessContent[Rows](ctx)
 		return tag, util.NewStatusInvalidArgument(err)
 	}
 	if dbClient == nil {
-		sc := util.NewStatusInvalidArgument(errors.New("error on PostgreSQL database query call: dbClient is nil"))
-		logxt.LogPrintf("%v", sc)
-		return nil, sc
+		return nil, util.NewStatusInvalidArgument(errors.New("error on PostgreSQL database query call: dbClient is nil"))
 	}
 	pgxRows, err := dbClient.Query(ctx, sql, arguments)
 	if err != nil {
-		logxt.LogPrintf("error on PostgreSQL database query call: %v", err)
 		return nil, util.NewStatusError(err)
 	}
 	return &rows{pgxRows: pgxRows, fd: fieldDescriptions(pgxRows.FieldDescriptions())}, util.NewStatusOk()

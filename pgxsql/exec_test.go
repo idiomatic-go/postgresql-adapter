@@ -29,8 +29,8 @@ func ExampleExec() {
 
 	//Output:
 	//Error  : example error text
-	//CmdTag : { 0 <nil>}
+	//CmdTag : { 0 false false false false}
 	//Error  : <nil>
-	//CmdTag : {select * 1000 <nil>}
+	//CmdTag : {select * 1000 false false false false}
 
 }

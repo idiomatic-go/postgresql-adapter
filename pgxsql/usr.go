@@ -8,7 +8,10 @@ const (
 type CommandTag struct {
 	Sql          string
 	RowsAffected int64
-	Result       any
+	Insert       bool
+	Update       bool
+	Delete       bool
+	Select       bool
 }
 
 type FieldDescription struct {
@@ -29,7 +32,7 @@ type Rows interface {
 	// Err returns any error that occurred while reading.
 	Err() error
 
-	// CommandTag returns the command tag from this queryv1. It is only available after Rows is closed.
+	// CommandTag returns the command tag from this query. It is only available after Rows is closed.
 	CommandTag() CommandTag
 
 	FieldDescriptions() []FieldDescription

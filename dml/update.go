@@ -38,7 +38,7 @@ func WriteUpdate(sql string, attrs []util.Attr, where []util.Attr) (string, erro
 func WriteUpdateSet(sb *strings.Builder, attrs []util.Attr) error {
 	max := len(attrs) - 1
 	if max < 0 {
-		return errors.New("invalid update argument, attrs slice is empty")
+		return errors.New("invalid update set argument, attrs slice is empty")
 	}
 	sb.WriteString(set)
 	for i, attr := range attrs {
@@ -58,7 +58,7 @@ func WriteUpdateSet(sb *strings.Builder, attrs []util.Attr) error {
 func WriteUpdateWhere(sb *strings.Builder, attrs []util.Attr) error {
 	max := len(attrs) - 1
 	if max < 0 {
-		return errors.New("invalid insert argument, attrs slice is empty")
+		return errors.New("invalid update where argument, attrs slice is empty")
 	}
 	sb.WriteString(where)
 	for i, attr := range attrs {

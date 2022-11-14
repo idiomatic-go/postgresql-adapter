@@ -17,7 +17,12 @@ func ExampleWriteUpdate() {
 	fmt.Printf("Error      : %v\n", err)
 
 	//Output:
-	//fail
+	//Stmt       : UPDATE slo_entry
+	//SET status_code = '503',
+	//minimum_code = 99,
+	//created_ts = now()
+	//WHERE customer_id = 'customer1' AND created_ts = 2022/11/14 19:17:43.703121 ;
+	//Error      : <nil>
 }
 
 func ExampleWriteUpdateSet() {
@@ -41,6 +46,11 @@ func ExampleWriteUpdateSet() {
 	//Stmt       : <nil>
 	//Error      : invalid updatet argument, attrs slice is empty
 	//Stmt       : SET status_code = '503'
+	//Error      : <nil>
+	//	Stmt       : SET status_code = '503',
+	//	minimum_code = 99,
+	//	created_ts = now()
+	//
 	//Error      : <nil>
 }
 
