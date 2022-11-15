@@ -4,7 +4,6 @@ import (
 	"embed"
 	"fmt"
 	"github.com/idiomatic-go/common-lib/fse"
-	"github.com/idiomatic-go/common-lib/util"
 )
 
 //go:embed resource/*
@@ -14,17 +13,24 @@ func init() {
 	execContentOverride = true
 }
 
+func NilEmpty(s string) string {
+	if s == "" {
+		return "<nil>"
+	}
+	return s
+}
+
 func ExampleExec() {
 	ctx := fse.ContextWithContent(nil, fs, "resource/error.txt")
 
 	cmd, sc := Exec(ctx, "")
-	fmt.Printf("Error  : %v\n", util.NilEmpty(sc.Error()))
+	fmt.Printf("Error  : %v\n", NilEmpty(sc.Error()))
 	fmt.Printf("CmdTag : %v\n", cmd)
 
 	ctx = fse.ContextWithContent(nil, fs, "resource/command-tag.json")
 
 	cmd, sc = Exec(ctx, "")
-	fmt.Printf("Error  : %v\n", util.NilEmpty(sc.Error()))
+	fmt.Printf("Error  : %v\n", NilEmpty(sc.Error()))
 	fmt.Printf("CmdTag : %v\n", cmd)
 
 	//Output:

@@ -2,7 +2,6 @@ package dml
 
 import (
 	"errors"
-	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"strings"
 )
@@ -22,7 +21,7 @@ WHERE condition;
 
 */
 
-func WriteUpdate(sql string, attrs []util.Attr, where []util.Attr) (string, error) {
+func WriteUpdate(sql string, attrs []sql.Attr, where []sql.Attr) (string, error) {
 	var sb strings.Builder
 
 	sb.WriteString(sql)
@@ -35,7 +34,7 @@ func WriteUpdate(sql string, attrs []util.Attr, where []util.Attr) (string, erro
 	return sb.String(), err
 }
 
-func WriteUpdateSet(sb *strings.Builder, attrs []util.Attr) error {
+func WriteUpdateSet(sb *strings.Builder, attrs []sql.Attr) error {
 	max := len(attrs) - 1
 	if max < 0 {
 		return errors.New("invalid update set argument, attrs slice is empty")
@@ -55,7 +54,7 @@ func WriteUpdateSet(sb *strings.Builder, attrs []util.Attr) error {
 	return nil
 }
 
-func WriteUpdateWhere(sb *strings.Builder, attrs []util.Attr) error {
+func WriteUpdateWhere(sb *strings.Builder, attrs []sql.Attr) error {
 	max := len(attrs) - 1
 	if max < 0 {
 		return errors.New("invalid update where argument, attrs slice is empty")

@@ -2,52 +2,58 @@ package sql
 
 import (
 	"fmt"
-	"github.com/idiomatic-go/common-lib/util"
 )
+
+func NilEmpty(s string) string {
+	if s == "" {
+		return "<nil>"
+	}
+	return s
+}
 
 func ExampleFmtValues() {
 	var ptr *int
 
 	v, err := FmtValue(nil)
-	fmt.Printf("Value  [nil]  : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [nil]  : %v\n", NilEmpty(v))
 	fmt.Printf("Error         : %v\n", err)
 
 	v, err = FmtValue(ptr)
-	fmt.Printf("Value  [ptr]  : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [ptr]  : %v\n", NilEmpty(v))
 	fmt.Printf("Error         : %v\n", err)
 
 	var n = 123
 	v, err = FmtValue(&n)
-	fmt.Printf("Value  [ptr]  : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [ptr]  : %v\n", NilEmpty(v))
 	fmt.Printf("Error         : %v\n", err)
 
 	v, err = FmtValue(true)
-	fmt.Printf("Value  [true] : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [true] : %v\n", NilEmpty(v))
 	fmt.Printf("Error         : %v\n", err)
 
 	v, err = FmtValue(1001)
-	fmt.Printf("Value  [1001] : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [1001] : %v\n", NilEmpty(v))
 	fmt.Printf("Error         : %v\n", err)
 
 	v, err = FmtValue("")
-	fmt.Printf("Value  [\"\"]   : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [\"\"]   : %v\n", NilEmpty(v))
 	fmt.Printf("Error         : %v\n", err)
 
 	//t := time.Now()
 	//v, err = FmtValue(t)
-	//fmt.Printf("Value  [time.Now] : %v\n", util.NilEmpty(v[:19]))
+	//fmt.Printf("Value  [time.Now] : %v\n", NilEmpty(v[:19]))
 	//fmt.Printf("Error             : %v\n", err)
 
 	v, err = FmtValue("test string")
-	fmt.Printf("Value  [test string]  : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [test string]  : %v\n", NilEmpty(v))
 	fmt.Printf("Error                 : %v\n", err)
 
 	v, err = FmtValue(Function("now()"))
-	fmt.Printf("Value  [now()]  : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [now()]  : %v\n", NilEmpty(v))
 	fmt.Printf("Error           : %v\n", err)
 
 	v, err = FmtValue("drop table")
-	fmt.Printf("Value  [drop table]  : %v\n", util.NilEmpty(v))
+	fmt.Printf("Value  [drop table]  : %v\n", NilEmpty(v))
 	fmt.Printf("Error                : %v\n", err)
 
 	//Output:
@@ -73,33 +79,33 @@ func ExampleFmtValues() {
 
 func ExampleFmtAttr() {
 
-	s, err := FmtAttr(util.Attr{})
-	fmt.Printf("Name  [\"\"]  : %v\n", util.NilEmpty(s))
+	s, err := FmtAttr(Attr{})
+	fmt.Printf("Name  [\"\"]  : %v\n", NilEmpty(s))
 	fmt.Printf("Error       : %v\n", err)
 
-	s, err = FmtAttr(util.Attr{Name: "attr_name_1"})
-	fmt.Printf("Name  [attr_name]  : %v\n", util.NilEmpty(s))
+	s, err = FmtAttr(Attr{Name: "attr_name_1"})
+	fmt.Printf("Name  [attr_name]  : %v\n", NilEmpty(s))
 	fmt.Printf("Error              : %v\n", err)
 
-	s, err = FmtAttr(util.Attr{Name: "attr_name_2", Val: 1234})
-	fmt.Printf("Name  [attr_name]  : %v\n", util.NilEmpty(s))
+	s, err = FmtAttr(Attr{Name: "attr_name_2", Val: 1234})
+	fmt.Printf("Name  [attr_name]  : %v\n", NilEmpty(s))
 	fmt.Printf("Error              : %v\n", err)
 
-	s, err = FmtAttr(util.Attr{Name: "attr_name_3", Val: false})
-	fmt.Printf("Name  [attr_name]  : %v\n", util.NilEmpty(s))
+	s, err = FmtAttr(Attr{Name: "attr_name_3", Val: false})
+	fmt.Printf("Name  [attr_name]  : %v\n", NilEmpty(s))
 	fmt.Printf("Error              : %v\n", err)
 
 	//s, err = FmtAttr(util.Attr{Name: "attr_name_4", Val: time.Now()})
 	//fmt.Println("default format:", time.Now())
-	//fmt.Printf("Name  [attr_name]  : %v\n", util.NilEmpty(s))
+	//fmt.Printf("Name  [attr_name]  : %v\n", NilEmpty(s))
 	//fmt.Printf("Error              : %v\n", err)
 
-	s, err = FmtAttr(util.Attr{Name: "attr_name_5", Val: "value string"})
-	fmt.Printf("Name  [attr_name]  : %v\n", util.NilEmpty(s))
+	s, err = FmtAttr(Attr{Name: "attr_name_5", Val: "value string"})
+	fmt.Printf("Name  [attr_name]  : %v\n", NilEmpty(s))
 	fmt.Printf("Error              : %v\n", err)
 
-	s, err = FmtAttr(util.Attr{Name: "attr_name_6", Val: Function("now()")})
-	fmt.Printf("Name  [attr_name]  : %v\n", util.NilEmpty(s))
+	s, err = FmtAttr(Attr{Name: "attr_name_6", Val: Function("now()")})
+	fmt.Printf("Name  [attr_name]  : %v\n", NilEmpty(s))
 	fmt.Printf("Error              : %v\n", err)
 
 	//Output:

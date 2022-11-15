@@ -2,18 +2,17 @@ package dml
 
 import (
 	"fmt"
-	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"strings"
 	"time"
 )
 
 func ExampleWriteUpdate() {
-	where := []util.Attr{{Name: "customer_id", Val: "customer1"}, {Name: "created_ts", Val: time.Now()}}
-	attrs := []util.Attr{{Name: "status_code", Val: "503"}, {Name: "minimum_code", Val: 99}, {Name: "created_ts", Val: sql.Function("now()")}}
+	where := []sql.Attr{{Name: "customer_id", Val: "customer1"}, {Name: "created_ts", Val: time.Now()}}
+	attrs := []sql.Attr{{Name: "status_code", Val: "503"}, {Name: "minimum_code", Val: 99}, {Name: "created_ts", Val: sql.Function("now()")}}
 
 	sql, err := WriteUpdate(UpdateSLOEntryStmt, attrs, where)
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sql))
+	fmt.Printf("Stmt       : %v\n", NilEmpty(sql))
 	fmt.Printf("Error      : %v\n", err)
 
 	//Output:
@@ -29,17 +28,17 @@ func ExampleWriteUpdateSet() {
 	sb := strings.Builder{}
 
 	err := WriteUpdateSet(&sb, nil)
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sb.String()))
+	fmt.Printf("Stmt       : %v\n", NilEmpty(sb.String()))
 	fmt.Printf("Error      : %v\n", err)
 
 	sb.Reset()
-	err = WriteUpdateSet(&sb, []util.Attr{{Name: "status_code", Val: "503"}})
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sb.String()))
+	err = WriteUpdateSet(&sb, []sql.Attr{{Name: "status_code", Val: "503"}})
+	fmt.Printf("Stmt       : %v\n", NilEmpty(sb.String()))
 	fmt.Printf("Error      : %v\n", err)
 
 	sb.Reset()
-	err = WriteUpdateSet(&sb, []util.Attr{{Name: "status_code", Val: "503"}, {Name: "minimum_code", Val: 99}, {Name: "created_ts", Val: sql.Function("now()")}})
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sb.String()))
+	err = WriteUpdateSet(&sb, []sql.Attr{{Name: "status_code", Val: "503"}, {Name: "minimum_code", Val: 99}, {Name: "created_ts", Val: sql.Function("now()")}})
+	fmt.Printf("Stmt       : %v\n", NilEmpty(sb.String()))
 	fmt.Printf("Error      : %v\n", err)
 
 	//Output:
@@ -58,21 +57,21 @@ func ExampleWriteUpdateWhere() {
 	sb := strings.Builder{}
 
 	err := WriteUpdateWhere(&sb, nil)
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sb.String()))
+	fmt.Printf("Stmt       : %v\n", NilEmpty(sb.String()))
 	fmt.Printf("Error      : %v\n", err)
 
-	err = WriteUpdateWhere(&sb, []util.Attr{{Name: "", Val: nil}})
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(strings.Trim(sb.String(), " ")))
-	fmt.Printf("Error      : %v\n", err)
-
-	sb.Reset()
-	err = WriteUpdateWhere(&sb, []util.Attr{{Name: "status_code", Val: "503"}})
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sb.String()))
+	err = WriteUpdateWhere(&sb, []sql.Attr{{Name: "", Val: nil}})
+	fmt.Printf("Stmt       : %v\n", NilEmpty(strings.Trim(sb.String(), " ")))
 	fmt.Printf("Error      : %v\n", err)
 
 	sb.Reset()
-	err = WriteUpdateWhere(&sb, []util.Attr{{Name: "status_code", Val: "503"}, {Name: "minimum_code", Val: 99}, {Name: "created_ts", Val: sql.Function("now()")}})
-	fmt.Printf("Stmt       : %v\n", util.NilEmpty(sb.String()))
+	err = WriteUpdateWhere(&sb, []sql.Attr{{Name: "status_code", Val: "503"}})
+	fmt.Printf("Stmt       : %v\n", NilEmpty(sb.String()))
+	fmt.Printf("Error      : %v\n", err)
+
+	sb.Reset()
+	err = WriteUpdateWhere(&sb, []sql.Attr{{Name: "status_code", Val: "503"}, {Name: "minimum_code", Val: 99}, {Name: "created_ts", Val: sql.Function("now()")}})
+	fmt.Printf("Stmt       : %v\n", NilEmpty(sb.String()))
 	fmt.Printf("Error      : %v\n", err)
 
 	//Output:

@@ -4,7 +4,6 @@ package pgxsql
 import (
 	"context"
 	"fmt"
-	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/vhost"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -18,14 +17,14 @@ func isClientStarted() bool {
 var clientStartup vhost.MessageHandler = func(msg vhost.Message) {
 	m, err := vhost.ReadMap(ConfigFileName)
 	if err != nil {
-		logxt.LogPrintf("error reading configuration file from mounted file system : %v", err)
+		vhost.LogPrintf("error reading configuration file from mounted file system : %v", err)
 		vhost.SendErrorResponse(Uri)
 		return
 	}
 	credentials := vhost.AccessCredentials(&msg)
 	// Validate credentials
 	if credentials == nil {
-		logxt.LogPrintf("%v", "pgxsql credentials function is nil")
+		vhost.LogPrintf("%v", "pgxsql credentials function is nil")
 		vhost.SendErrorResponse(Uri)
 		return
 	}
@@ -37,7 +36,7 @@ var clientStartup vhost.MessageHandler = func(msg vhost.Message) {
 func StartupDirect(config map[string]string, credentials vhost.Credentials) bool {
 	url, ok := config[DatabaseURLKey]
 	if !ok || url == "" {
-		logxt.LogPrintf("database URL does not exist in map, or value is empty : %v", DatabaseURLKey)
+		vhost.LogPrintf("database URL does not exist in map, or value is empty : %v", DatabaseURLKey)
 		return false
 	}
 
@@ -56,13 +55,13 @@ func StartupDirect(config map[string]string, credentials vhost.Credentials) bool
 	var err error
 	dbClient, err = pgxpool.New(context.Background(), s)
 	if err != nil {
-		logxt.LogPrintf("unable to create connection pool : %v", err)
+		vhost.LogPrintf("unable to create connection pool : %v", err)
 		return false
 	}
 	conn, err1 := dbClient.Acquire(context.Background())
 	defer conn.Release()
 	if err1 != nil {
-		logxt.LogPrintf("unable to acquire connection from pool : %v", err1)
+		vhost.LogPrintf("unable to acquire connection from pool : %v", err1)
 		ClientShutdown()
 		return false
 	}
@@ -79,7 +78,7 @@ func ClientShutdown() {
 func connectString(url string, credentials vhost.Credentials) string {
 	username, password, err := credentials()
 	if err != nil {
-		logxt.LogPrintf("error accessing credentials: %v", err)
+		vhost.LogPrintf("error accessing credentials: %v", err)
 		return ""
 	}
 	return fmt.Sprintf(url, username, password)

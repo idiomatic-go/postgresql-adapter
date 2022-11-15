@@ -2,10 +2,16 @@ package dml
 
 import (
 	"fmt"
-	"github.com/idiomatic-go/common-lib/util"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"strings"
 )
+
+func NilEmpty(s string) string {
+	if s == "" {
+		return "<nil>"
+	}
+	return s
+}
 
 func ExampleWriteInsert() {
 	stmt, err := WriteInsert(InsertSLOEntryStmt, []any{100, "test string", false, sql.Function(SLOEntryNextValFn), sql.Function(ChangedTimestampFn)})
@@ -24,7 +30,7 @@ func ExampleWriteInsertValues() {
 	sb := strings.Builder{}
 
 	err := WriteInsertValues(&sb, nil)
-	fmt.Printf("Stmt    : %v\n", util.NilEmpty(sb.String()))
+	fmt.Printf("Stmt    : %v\n", NilEmpty(sb.String()))
 	fmt.Printf("Error   : %v\n", err)
 
 	sb1 := strings.Builder{}
