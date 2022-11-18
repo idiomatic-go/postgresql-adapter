@@ -1,11 +1,16 @@
-DROP TABLE IF EXISTS counter;
+DROP TABLE IF EXISTS ping;
 
-CREATE TABLE counter (
-    id INT NOT NULL,
-    org_id VARCHAR(40) NOT NULL,
-    track_activity BOOLEAN NOT NULL,
-    created_ts TIMESTAMP(6) NOT NULL,
-    changed_ts TIMESTAMP(6) ,
-    PRIMARY KEY(id,org_id)
+CREATE TABLE ping (
+    customer_id INT NOT NULL,
+    application VARCHAR(40) NOT NULL,
+
+    region VARCHAR(40),
+    zone VARCHAR(40),
+    sub_zone VARCHAR(40),
+
+    status_code INT NOT NULL,
+
+    start_time TIMESTAMP(6) NOT NULL,
+    duration_ms INT NOT NULL,
+   /* PRIMARY KEY(customer_id)*/
 );
-

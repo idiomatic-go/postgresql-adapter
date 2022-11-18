@@ -4,6 +4,7 @@ package pgxsql
 import (
 	"context"
 	"fmt"
+	"github.com/idiomatic-go/common-lib/eventing"
 	"github.com/idiomatic-go/common-lib/vhost"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -14,26 +15,30 @@ func isClientStarted() bool {
 	return dbClient != nil
 }
 
-var clientStartup vhost.MessageHandler = func(msg vhost.Message) {
+var clientStartup eventing.MessageHandler = func(msg eventing.Message) {
 	m, err := vhost.ReadMap(ConfigFileName)
 	if err != nil {
 		vhost.LogPrintf("error reading configuration file from mounted file system : %v", err)
-		vhost.SendErrorResponse(Uri)
+		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
 		return
 	}
 	credentials := vhost.AccessCredentials(&msg)
 	// Validate credentials
 	if credentials == nil {
 		vhost.LogPrintf("%v", "pgxsql credentials function is nil")
-		vhost.SendErrorResponse(Uri)
+		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
 		return
 	}
 	if !StartupDirect(m, credentials) {
-		vhost.SendErrorResponse(Uri)
+		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
 	}
 }
 
 func StartupDirect(config map[string]string, credentials vhost.Credentials) bool {
+	if isClientStarted() {
+		vhost.LogPrintf("%v", "database client is already running")
+		return false
+	}
 	url, ok := config[DatabaseURLKey]
 	if !ok || url == "" {
 		vhost.LogPrintf("database URL does not exist in map, or value is empty : %v", DatabaseURLKey)
@@ -62,13 +67,13 @@ func StartupDirect(config map[string]string, credentials vhost.Credentials) bool
 	defer conn.Release()
 	if err1 != nil {
 		vhost.LogPrintf("unable to acquire connection from pool : %v", err1)
-		ClientShutdown()
+		clientShutdown()
 		return false
 	}
 	return true
 }
 
-func ClientShutdown() {
+func clientShutdown() {
 	if dbClient != nil {
 		dbClient.Close()
 		dbClient = nil

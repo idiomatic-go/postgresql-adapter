@@ -1,23 +1,27 @@
 package pgxsql
 
 import (
+	"github.com/idiomatic-go/common-lib/eventing"
 	"github.com/idiomatic-go/common-lib/vhost"
 )
 
-var c = make(chan vhost.Message, 10)
+var c = make(chan eventing.Message, 10)
 
 // init - registers package with a channel
 func init() {
-	vhost.RegisterPackage(Uri, c, nil)
+	vhost.RegisterPackage(Uri, c)
 	go receive()
 }
 
-func startup(msg vhost.Message) {
-	clientStartup(msg)
-}
-
-func shutdown() {
-	ClientShutdown()
+var messageHandler eventing.MessageHandler = func(msg eventing.Message) {
+	switch msg.Event {
+	case eventing.StartupEvent:
+		if !isClientStarted() {
+			clientStartup(msg)
+		}
+	case eventing.ShutdownEvent:
+		clientShutdown()
+	}
 }
 
 func receive() {
@@ -28,14 +32,7 @@ func receive() {
 			if !open {
 				return
 			}
-			switch msg.Event {
-			case vhost.StartupEvent:
-				if !isClientStarted() {
-					startup(msg)
-				}
-			case vhost.ShutdownEvent:
-				shutdown()
-			}
+			messageHandler(msg)
 		}
 	}
 }
