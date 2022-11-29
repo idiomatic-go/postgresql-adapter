@@ -3,15 +3,15 @@ package pgxsql
 import (
 	"context"
 	"errors"
-	"github.com/idiomatic-go/common-lib/fse"
 	"github.com/idiomatic-go/common-lib/vhost"
 	"github.com/idiomatic-go/postgresql-adapter/dml"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 )
 
-var execContentOverride = false
-
 func ExecInsert(ctx context.Context, sql string, values []any) (CommandTag, vhost.Status) {
+	if vhost.IsContextContent(ctx) {
+		return vhost.ProcessContextContent[CommandTag](ctx)
+	}
 	stmt, err := dml.WriteInsert(sql, values)
 	if err != nil {
 		return CommandTag{}, vhost.NewStatusError(err)
@@ -20,6 +20,9 @@ func ExecInsert(ctx context.Context, sql string, values []any) (CommandTag, vhos
 }
 
 func ExecUpdate(ctx context.Context, sql string, attrs []sql.Attr, where []sql.Attr) (CommandTag, vhost.Status) {
+	if vhost.IsContextContent(ctx) {
+		return vhost.ProcessContextContent[CommandTag](ctx)
+	}
 	stmt, err := dml.WriteUpdate(sql, attrs, where)
 	if err != nil {
 		return CommandTag{}, vhost.NewStatusError(err)
@@ -28,9 +31,8 @@ func ExecUpdate(ctx context.Context, sql string, attrs []sql.Attr, where []sql.A
 }
 
 func Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, vhost.Status) {
-	if execContentOverride {
-		tag, err := fse.ProcessContent[CommandTag](ctx)
-		return tag, vhost.NewStatusInvalidArgument(err)
+	if vhost.IsContextContent(ctx) {
+		return vhost.ProcessContextContent[CommandTag](ctx)
 	}
 	if dbClient == nil {
 		return CommandTag{}, vhost.NewStatusInvalidArgument(errors.New("error on PostgreSQL exec call : dbClient is nil"))

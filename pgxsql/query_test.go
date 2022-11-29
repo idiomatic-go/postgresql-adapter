@@ -1,16 +1,13 @@
 package pgxsql
 
 import (
+	"errors"
 	"fmt"
-	"github.com/idiomatic-go/common-lib/fse"
+	"github.com/idiomatic-go/common-lib/vhost"
 )
 
-func init() {
-	queryContentOverride = true
-}
-
 func ExampleQuery() {
-	ctx := fse.ContextWithContent(nil, fs, "resource/error.txt")
+	ctx := vhost.ContextWithAnyContent(nil, errors.New("example error text"))
 
 	rows, sc := Query(ctx, "")
 	fmt.Printf("Error  : %v\n", sc)
@@ -23,7 +20,7 @@ func ExampleQuery() {
 }
 
 func ExampleQueryInvalidContent() {
-	ctx := fse.ContextWithContent(nil, fs, "resource/rows.json")
+	ctx := vhost.ContextWithAnyContent(nil, errors.New("json: cannot unmarshal object into Go value of type pgxsql.Rows"))
 
 	rows, sc := Query(ctx, "")
 	fmt.Printf("Error  : %v\n", sc)

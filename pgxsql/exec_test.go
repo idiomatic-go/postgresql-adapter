@@ -2,16 +2,13 @@ package pgxsql
 
 import (
 	"embed"
+	"errors"
 	"fmt"
-	"github.com/idiomatic-go/common-lib/fse"
+	"github.com/idiomatic-go/common-lib/vhost"
 )
 
 //go:embed resource/*
 var fs embed.FS
-
-func init() {
-	execContentOverride = true
-}
 
 func NilEmpty(s string) string {
 	if s == "" {
@@ -21,13 +18,13 @@ func NilEmpty(s string) string {
 }
 
 func ExampleExec() {
-	ctx := fse.ContextWithContent(nil, fs, "resource/error.txt")
+	ctx := vhost.ContextWithAnyContent(nil, errors.New("example error text"))
 
 	cmd, sc := Exec(ctx, "")
 	fmt.Printf("Error  : %v\n", NilEmpty(sc.Error()))
 	fmt.Printf("CmdTag : %v\n", cmd)
 
-	ctx = fse.ContextWithContent(nil, fs, "resource/command-tag.json")
+	ctx = vhost.ContextWithAnyContent(nil, CommandTag{Sql: "select *", RowsAffected: 1000, Insert: false, Update: false, Delete: false, Select: true})
 
 	cmd, sc = Exec(ctx, "")
 	fmt.Printf("Error  : %v\n", NilEmpty(sc.Error()))
@@ -37,6 +34,6 @@ func ExampleExec() {
 	//Error  : example error text
 	//CmdTag : { 0 false false false false}
 	//Error  : <nil>
-	//CmdTag : {select * 1000 false false false false}
+	//CmdTag : {select * 1000 false false false true}
 
 }

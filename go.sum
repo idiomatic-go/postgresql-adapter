@@ -6,6 +6,8 @@ github.com/idiomatic-go/common-lib v0.0.0-20221118113854-f6c78657a9a1 h1:JZK8l8B
 github.com/idiomatic-go/common-lib v0.0.0-20221118113854-f6c78657a9a1/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/idiomatic-go/common-lib v0.0.0-20221119130027-bcb08db3e45a h1:AxWo0Tz8s/pTw49JdOtFNGnkFD93c45K3ebwWXS7I8c=
 github.com/idiomatic-go/common-lib v0.0.0-20221119130027-bcb08db3e45a/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
+github.com/idiomatic-go/common-lib v0.0.0-20221129202347-5b0d42ed242b h1:ViFJj6r8zk7jVb+39V0xwTKp/p2WGEhmqDeaz6LKmsI=
+github.com/idiomatic-go/common-lib v0.0.0-20221129202347-5b0d42ed242b/go.mod h1:JpDxKJmQ2Vw51nTIXTkn7BepYmUP4W6+z3ziTp6lAtM=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=
 github.com/jackc/pgpassfile v1.0.0/go.mod h1:CEx0iS5ambNFdcRtxPj5JhEz+xB6uRky5eyVu/W2HEg=
 github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b h1:C8S2+VttkHFdOOCXJe+YGfa4vHYwlt4Zx+IVXQ97jYg=

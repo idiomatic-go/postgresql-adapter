@@ -3,7 +3,6 @@ package pgxsql
 import (
 	"context"
 	"errors"
-	"github.com/idiomatic-go/common-lib/fse"
 	"github.com/idiomatic-go/common-lib/vhost"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -70,12 +69,9 @@ func (r *rows) RawValues() [][]byte {
 	return r.pgxRows.RawValues()
 }
 
-var queryContentOverride = false
-
 func Query(ctx context.Context, sql string, arguments ...any) (Rows, vhost.Status) {
-	if queryContentOverride {
-		tag, err := fse.ProcessContent[Rows](ctx)
-		return tag, vhost.NewStatusInvalidArgument(err)
+	if vhost.IsContextContent(ctx) {
+		return vhost.ProcessContextContent[Rows](ctx)
 	}
 	if dbClient == nil {
 		return nil, vhost.NewStatusInvalidArgument(errors.New("error on PostgreSQL database query call: dbClient is nil"))
