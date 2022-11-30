@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/idiomatic-go/common-lib/eventing"
+	"github.com/idiomatic-go/common-lib/logxt"
 	"github.com/idiomatic-go/common-lib/vhost"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -18,14 +19,14 @@ func isClientStarted() bool {
 var clientStartup eventing.MessageHandler = func(msg eventing.Message) {
 	m, err := vhost.ReadMap(ConfigFileName)
 	if err != nil {
-		vhost.LogPrintf("error reading configuration file from mounted file system : %v", err)
+		logxt.LogPrintf("error reading configuration file from mounted file system : %v\n", err)
 		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
 		return
 	}
 	credentials := vhost.AccessCredentials(&msg)
 	// Validate credentials
 	if credentials == nil {
-		vhost.LogPrintf("%v", "pgxsql credentials function is nil")
+		logxt.LogPrintf("%v\n", "pgxsql credentials function is nil")
 		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
 		return
 	}
@@ -36,12 +37,12 @@ var clientStartup eventing.MessageHandler = func(msg eventing.Message) {
 
 func StartupDirect(config map[string]string, credentials vhost.Credentials) bool {
 	if isClientStarted() {
-		vhost.LogPrintf("%v", "database client is already running")
+		logxt.LogPrintf("%v\n", "database client is already running")
 		return false
 	}
 	url, ok := config[DatabaseURLKey]
 	if !ok || url == "" {
-		vhost.LogPrintf("database URL does not exist in map, or value is empty : %v", DatabaseURLKey)
+		logxt.LogPrintf("database URL does not exist in map, or value is empty : %v\n", DatabaseURLKey)
 		return false
 	}
 
@@ -60,13 +61,13 @@ func StartupDirect(config map[string]string, credentials vhost.Credentials) bool
 	var err error
 	dbClient, err = pgxpool.New(context.Background(), s)
 	if err != nil {
-		vhost.LogPrintf("unable to create connection pool : %v", err)
+		logxt.LogPrintf("unable to create connection pool : %v\n", err)
 		return false
 	}
 	conn, err1 := dbClient.Acquire(context.Background())
 	defer conn.Release()
 	if err1 != nil {
-		vhost.LogPrintf("unable to acquire connection from pool : %v", err1)
+		logxt.LogPrintf("unable to acquire connection from pool : %v\n", err1)
 		clientShutdown()
 		return false
 	}
@@ -83,7 +84,7 @@ func clientShutdown() {
 func connectString(url string, credentials vhost.Credentials) string {
 	username, password, err := credentials()
 	if err != nil {
-		vhost.LogPrintf("error accessing credentials: %v", err)
+		logxt.LogPrintf("error accessing credentials: %v\n", err)
 		return ""
 	}
 	return fmt.Sprintf(url, username, password)

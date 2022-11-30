@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"github.com/idiomatic-go/postgresql-adapter/sql"
 	"strings"
-	"time"
 )
 
 func ExampleWriteUpdate() {
-	where := []sql.Attr{{Name: "customer_id", Val: "customer1"}, {Name: "created_ts", Val: time.Now()}}
+	where := []sql.Attr{{Name: "customer_id", Val: "customer1"}, {Name: "created_ts", Val: "2022/11/30 15:48:54.049496"}} //time.Now()}}
 	attrs := []sql.Attr{{Name: "status_code", Val: "503"}, {Name: "minimum_code", Val: 99}, {Name: "created_ts", Val: sql.Function("now()")}}
 
 	sql, err := WriteUpdate(UpdateSLOEntryStmt, attrs, where)
@@ -20,7 +19,7 @@ func ExampleWriteUpdate() {
 	//SET status_code = '503',
 	//minimum_code = 99,
 	//created_ts = now()
-	//WHERE customer_id = 'customer1' AND created_ts = 2022/11/14 19:17:43.703121 ;
+	//WHERE customer_id = 'customer1' AND created_ts = '2022/11/30 15:48:54.049496';
 	//Error      : <nil>
 }
 
@@ -43,12 +42,13 @@ func ExampleWriteUpdateSet() {
 
 	//Output:
 	//Stmt       : <nil>
-	//Error      : invalid updatet argument, attrs slice is empty
+	//Error      : invalid update set argument, attrs slice is empty
 	//Stmt       : SET status_code = '503'
+	//
 	//Error      : <nil>
-	//	Stmt       : SET status_code = '503',
-	//	minimum_code = 99,
-	//	created_ts = now()
+	//Stmt       : SET status_code = '503',
+	//minimum_code = 99,
+	//created_ts = now()
 	//
 	//Error      : <nil>
 }
@@ -76,12 +76,12 @@ func ExampleWriteUpdateWhere() {
 
 	//Output:
 	//Stmt       : <nil>
-	//Error      : invalid insert argument, attrs slice is empty
+	//Error      : invalid update where argument, attrs slice is empty
 	//Stmt       : WHERE
 	//Error      : invalid attribute argument, attribute name is empty
-	//Stmt       : WHERE status_code = '503'
+	//Stmt       : WHERE status_code = '503';
 	//Error      : <nil>
-	//Stmt       : WHERE status_code = '503' AND minimum_code = 99 AND created_ts = now()
+	//Stmt       : WHERE status_code = '503' AND minimum_code = 99 AND created_ts = now();
 	//Error      : <nil>
 
 }

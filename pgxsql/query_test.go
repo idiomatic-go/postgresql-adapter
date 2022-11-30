@@ -6,28 +6,28 @@ import (
 	"github.com/idiomatic-go/common-lib/vhost"
 )
 
-func ExampleQuery() {
-	ctx := vhost.ContextWithAnyContent(nil, errors.New("example error text"))
+func ExampleQueryStatus() {
+	ctx := vhost.ContextWithContent(nil, errors.New("example error text"))
 
-	rows, sc := Query(ctx, "")
-	fmt.Printf("Error  : %v\n", sc)
+	rows, status := Query(ctx, "")
+	fmt.Printf("Status : %v\n", status)
 	fmt.Printf("Rows   : %v\n", rows)
 
 	//Output:
-	//Error  : example error text
+	//Status : example error text
 	//Rows   : <nil>
 
 }
 
-func ExampleQueryInvalidContent() {
-	ctx := vhost.ContextWithAnyContent(nil, errors.New("json: cannot unmarshal object into Go value of type pgxsql.Rows"))
+func ExampleQueryRows() {
+	ctx := vhost.ContextWithContent(nil, errors.New("json: cannot unmarshal object into Go value of type pgxsql.Rows"))
 
-	rows, sc := Query(ctx, "")
-	fmt.Printf("Error  : %v\n", sc)
+	rows, status := Query(ctx, "")
+	fmt.Printf("Status : %v\n", status)
 	fmt.Printf("Rows   : %v\n", rows)
 
 	//Output:
-	//Error  : json: cannot unmarshal object into Go value of type pgxsql.Rows
+	//Status : json: cannot unmarshal object into Go value of type pgxsql.Rows
 	//Rows   : <nil>
 
 }

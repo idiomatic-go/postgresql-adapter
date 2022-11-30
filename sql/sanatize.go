@@ -3,6 +3,7 @@ package sql
 import (
 	"errors"
 	"fmt"
+	"github.com/idiomatic-go/common-lib/util"
 	"strings"
 )
 
@@ -11,7 +12,7 @@ import (
 // quotes /*
 
 func SanitizeString(s string) error {
-	trimmed := TrimDoubleSpace(strings.ToLower(s))
+	trimmed := util.TrimDoubleSpace(strings.ToLower(s))
 	for _, t := range tokens {
 		index := strings.Index(trimmed, t)
 		if index != -1 {

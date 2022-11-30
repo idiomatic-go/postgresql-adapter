@@ -3,13 +3,13 @@ package sql
 import (
 	"errors"
 	"fmt"
-	"github.com/idiomatic-go/common-lib/vhost"
+	"github.com/idiomatic-go/common-lib/util"
 	"reflect"
 	"time"
 )
 
 func FmtValue(v any) (string, error) {
-	if vhost.IsNil(v) {
+	if util.IsNil(v) {
 		return "NULL", nil
 	}
 	t := reflect.TypeOf(v)
@@ -18,7 +18,7 @@ func FmtValue(v any) (string, error) {
 	}
 	// Process time.Time first
 	if t, ok := v.(time.Time); ok {
-		return FmtTimestamp(t), nil
+		return util.FmtTimestamp(t), nil
 	}
 	if t.Kind() != reflect.String {
 		return fmt.Sprintf(valueFmt, v), nil
