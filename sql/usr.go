@@ -4,6 +4,10 @@ const (
 	valueFmt  = "%v"
 	stringFmt = "'%v'"
 	attrFmt   = "%v = %v"
+	Delete    = "DELETE"
+	Update    = "UPDATE"
+	Insert    = "INSERT"
+	Select    = "SELECT"
 )
 
 type Function string
