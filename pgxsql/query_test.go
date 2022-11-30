@@ -4,7 +4,22 @@ import (
 	"errors"
 	"fmt"
 	"github.com/idiomatic-go/common-lib/vhost"
+	"reflect"
 )
+
+type rowsT struct {
+}
+
+func (r *rowsT) Close()     {}
+func (r *rowsT) Err() error { return nil }
+func (r *rowsT) CommandTag() CommandTag {
+	return CommandTag{Sql: "select *", RowsAffected: 1, Insert: false, Update: false, Delete: false, Select: true}
+}
+func (r *rowsT) FieldDescriptions() []FieldDescription { return nil }
+func (r *rowsT) Next() bool                            { return false }
+func (r *rowsT) Scan(dest ...any) error                { return nil }
+func (r *rowsT) Values() ([]any, error)                { return nil, nil }
+func (r *rowsT) RawValues() [][]byte                   { return nil }
 
 func ExampleQueryStatus() {
 	ctx := vhost.ContextWithContent(nil, errors.New("example error text"))
@@ -20,14 +35,18 @@ func ExampleQueryStatus() {
 }
 
 func ExampleQueryRows() {
-	ctx := vhost.ContextWithContent(nil, errors.New("json: cannot unmarshal object into Go value of type pgxsql.Rows"))
+	var i Rows = &rowsT{}
+
+	ctx := vhost.ContextWithContent(nil, i)
 
 	rows, status := Query(ctx, "")
-	fmt.Printf("Status : %v\n", status)
-	fmt.Printf("Rows   : %v\n", rows)
+	fmt.Printf("Ok         : %v\n", status.Ok())
+	fmt.Printf("Rows       : %v\n", reflect.TypeOf(rows))
+	fmt.Printf("CommandTag : %v\n", rows.CommandTag())
 
 	//Output:
-	//Status : json: cannot unmarshal object into Go value of type pgxsql.Rows
-	//Rows   : <nil>
+	//Ok         : true
+	//Rows       : *pgxsql.rowsT
+	//CommandTag : {select * 1 false false false true}
 
 }
