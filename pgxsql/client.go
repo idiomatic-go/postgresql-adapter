@@ -38,6 +38,7 @@ var clientStartup eventing.MessageHandler = func(msg eventing.Message) {
 	if status.IsError() {
 		logxt.LogPrintf("%v\n", status)
 		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
+		return
 	}
 	eventing.SendSuccessfulStartupResponse(Uri)
 }
