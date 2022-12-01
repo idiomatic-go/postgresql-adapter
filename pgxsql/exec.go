@@ -54,7 +54,7 @@ func ExecWithCommand(ctx context.Context, tag *CommandTag, sql string, arguments
 	}
 	if tag != nil && t.RowsAffected() != tag.RowsAffected {
 		err0 := txn.Rollback(ctx)
-		return CommandTag{}, vhost.NewStatusError(errors.New(fmt.Sprintf("error %v exec statement : actual RowsAffected %v != expected RowsAffected %v", StatementToString(t), t.RowsAffected(), tag.RowsAffected)), err0)
+		return CommandTag{}, vhost.NewStatusError(errors.New(fmt.Sprintf("error exec statement [%v] : actual RowsAffected %v != expected RowsAffected %v", t.String(), t.RowsAffected(), tag.RowsAffected)), err0)
 	}
 	err = txn.Commit(ctx)
 	if err != nil {

@@ -3,6 +3,7 @@ package pgxsql
 // https://pkg.go.dev/github.com/jackc/pgx/v5/pgtype
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/idiomatic-go/common-lib/eventing"
 	"github.com/idiomatic-go/common-lib/logxt"
@@ -17,6 +18,9 @@ func isClientStarted() bool {
 }
 
 var clientStartup eventing.MessageHandler = func(msg eventing.Message) {
+	if isClientStarted() {
+		return
+	}
 	m, err := vhost.ReadMap(ConfigFileName)
 	if err != nil {
 		logxt.LogPrintf("error reading configuration file from mounted file system : %v\n", err)
@@ -30,20 +34,22 @@ var clientStartup eventing.MessageHandler = func(msg eventing.Message) {
 		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
 		return
 	}
-	if !StartupDirect(m, credentials) {
+	status := ClientStartup(m, credentials)
+	if status.IsError() {
+		logxt.LogPrintf("%v\n", status)
 		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
 	}
+	eventing.SendSuccessfulStartupResponse(Uri)
 }
 
-func StartupDirect(config map[string]string, credentials vhost.Credentials) bool {
+func ClientStartup(config map[string]string, credentials vhost.Credentials) vhost.Status {
 	if isClientStarted() {
-		logxt.LogPrintf("%v\n", "database client is already running")
-		return false
+		return vhost.NewStatusOk()
 	}
+	// Access database URL
 	url, ok := config[DatabaseURLKey]
 	if !ok || url == "" {
-		logxt.LogPrintf("database URL does not exist in map, or value is empty : %v\n", DatabaseURLKey)
-		return false
+		return vhost.NewStatusError(errors.New(fmt.Sprintf("database URL does not exist in map, or value is empty : %v\n", DatabaseURLKey)))
 	}
 
 	// Determine if this is an override by interrogating the database url
@@ -53,39 +59,40 @@ func StartupDirect(config map[string]string, credentials vhost.Credentials) bool
 	//	return
 	//}
 
-	// Create connection string, pool and acquire connection
-	s := connectString(url, credentials)
-	if s == "" {
-		return false
+	// Create connection string with credentials
+	s, status := connectString(url, credentials)
+	if status.IsError() {
+		return status
 	}
+	// Create pooled client and acquire connection
 	var err error
 	dbClient, err = pgxpool.New(context.Background(), s)
 	if err != nil {
-		logxt.LogPrintf("unable to create connection pool : %v\n", err)
-		return false
+		return vhost.NewStatusError(errors.New(fmt.Sprintf("unable to create connection pool : %v\n", err)))
 	}
 	conn, err1 := dbClient.Acquire(context.Background())
-	defer conn.Release()
 	if err1 != nil {
-		logxt.LogPrintf("unable to acquire connection from pool : %v\n", err1)
-		clientShutdown()
-		return false
+		ClientShutdown()
+		return vhost.NewStatusError(errors.New(fmt.Sprintf("unable to acquire connection from pool : %v\n", err1)))
 	}
-	return true
+	conn.Release()
+	return vhost.NewStatusOk()
 }
 
-func clientShutdown() {
+func ClientShutdown() {
 	if dbClient != nil {
 		dbClient.Close()
 		dbClient = nil
 	}
 }
 
-func connectString(url string, credentials vhost.Credentials) string {
+func connectString(url string, credentials vhost.Credentials) (string, vhost.Status) {
+	if credentials == nil {
+		return url, vhost.NewStatusOk()
+	}
 	username, password, err := credentials()
 	if err != nil {
-		logxt.LogPrintf("error accessing credentials: %v\n", err)
-		return ""
+		return "", vhost.NewStatusError(errors.New(fmt.Sprintf("error accessing credentials: %v\n", err)))
 	}
-	return fmt.Sprintf(url, username, password)
+	return fmt.Sprintf(url, username, password), vhost.NewStatusOk()
 }

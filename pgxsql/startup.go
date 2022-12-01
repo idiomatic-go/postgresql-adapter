@@ -5,7 +5,7 @@ import (
 	"github.com/idiomatic-go/common-lib/vhost"
 )
 
-var c = make(chan eventing.Message, 10)
+var c = make(chan eventing.Message, 1)
 
 // init - registers package with a channel
 func init() {
@@ -16,11 +16,9 @@ func init() {
 var messageHandler eventing.MessageHandler = func(msg eventing.Message) {
 	switch msg.Event {
 	case eventing.StartupEvent:
-		if !isClientStarted() {
-			clientStartup(msg)
-		}
+		clientStartup(msg)
 	case eventing.ShutdownEvent:
-		clientShutdown()
+		ClientShutdown()
 	}
 }
 
