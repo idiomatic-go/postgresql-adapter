@@ -23,24 +23,24 @@ var clientStartup eventing.MessageHandler = func(msg eventing.Message) {
 	}
 	m, err := vhost.ReadMap(ConfigFileName)
 	if err != nil {
-		logxt.LogPrintf("error reading configuration file from mounted file system : %v\n", err)
-		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
+		logxt.Printf("error reading configuration file from mounted file system : %v\n", err)
+		vhost.SendStartupFailureResponse(Uri)
 		return
 	}
 	credentials := vhost.AccessCredentials(&msg)
 	// Validate credentials
 	if credentials == nil {
-		logxt.LogPrintf("%v\n", "pgxsql credentials function is nil")
-		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
+		logxt.Printf("%v\n", "pgxsql credentials function is nil")
+		vhost.SendStartupFailureResponse(Uri)
 		return
 	}
 	status := ClientStartup(m, credentials)
 	if status.IsError() {
-		logxt.LogPrintf("%v\n", status)
-		eventing.SendErrorResponse(Uri, vhost.StatusInternal)
+		logxt.Printf("%v\n", status)
+		vhost.SendStartupFailureResponse(Uri)
 		return
 	}
-	eventing.SendSuccessfulStartupResponse(Uri)
+	vhost.SendStartupSuccessfulResponse(Uri)
 }
 
 func ClientStartup(config map[string]string, credentials vhost.Credentials) vhost.Status {
