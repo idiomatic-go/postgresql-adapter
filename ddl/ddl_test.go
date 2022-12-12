@@ -4,8 +4,8 @@ import (
 	"context"
 	"embed"
 	"fmt"
+	"github.com/idiomatic-go/common-lib/fncall"
 	"github.com/idiomatic-go/common-lib/fse"
-	"github.com/idiomatic-go/common-lib/vhost"
 	"github.com/idiomatic-go/postgresql-adapter/pgxsql"
 )
 
@@ -40,19 +40,19 @@ func ExampleCreateDatabase() {
 	//fail
 }
 
-func createRoles() vhost.Status {
+func createRoles() fncall.Status {
 	tag, status := execDDL("resource/create_roles.sql")
 	if status.IsError() {
 		return status
 	}
 	fmt.Printf("%v\n", tag)
-	return vhost.NewStatusOk()
+	return fncall.NewStatusOk()
 }
 
-func execDDL(name string) (pgxsql.CommandTag, vhost.Status) {
+func execDDL(name string) (pgxsql.CommandTag, fncall.Status) {
 	buf, err := fse.ReadFile(fs, name)
 	if err != nil {
-		return pgxsql.CommandTag{}, vhost.NewStatusError(err)
+		return pgxsql.CommandTag{}, fncall.NewStatusError(err)
 	}
 	s := string(buf)
 	return pgxsql.Exec(context.Background(), s)
@@ -77,12 +77,12 @@ func _ExampleDropDatabase() {
 	//fail
 }
 
-func execScripts(scripts []string) vhost.Status {
+func execScripts(scripts []string) fncall.Status {
 	var tag pgxsql.CommandTag
-	var status vhost.Status
+	var status fncall.Status
 
 	if scripts == nil || len(scripts) == 0 {
-		return vhost.NewStatusOk()
+		return fncall.NewStatusOk()
 	}
 	for _, cmd := range scripts {
 		tag, status = pgxsql.Exec(context.Background(), cmd)
@@ -91,6 +91,5 @@ func execScripts(scripts []string) vhost.Status {
 		}
 		fmt.Printf("%v\n", tag)
 	}
-	return vhost.NewStatusOk()
+	return fncall.NewStatusOk()
 }
-

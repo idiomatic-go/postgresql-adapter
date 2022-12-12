@@ -3,24 +3,24 @@ package pgxsql
 import (
 	"context"
 	"errors"
-	"github.com/idiomatic-go/common-lib/vhost"
+	"github.com/idiomatic-go/common-lib/fncall"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func Stat() (*pgxpool.Stat, vhost.Status) {
+func Stat() (*pgxpool.Stat, fncall.Status) {
 	if dbClient == nil {
-		return nil, vhost.NewStatusInvalidArgument(errors.New("error on PostgreSQL stat call : dbClient is nil"))
+		return nil, fncall.NewStatusInvalidArgument(errors.New("error on PostgreSQL stat call : dbClient is nil"))
 	}
 	return dbClient.Stat(), nil
 }
 
-func Ping(ctx context.Context) vhost.Status {
+func Ping(ctx context.Context) fncall.Status {
 	if dbClient == nil {
-		return vhost.NewStatusInvalidArgument(errors.New("error on PostgreSQL pingc call : dbClient is nil"))
+		return fncall.NewStatusInvalidArgument(errors.New("error on PostgreSQL pingc call : dbClient is nil"))
 	}
 	err := dbClient.Ping(ctx)
 	if err != nil {
-		return vhost.NewStatusError(err)
+		return fncall.NewStatusError(err)
 	}
-	return vhost.NewStatusOk()
+	return fncall.NewStatusOk()
 }
